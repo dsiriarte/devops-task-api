@@ -144,16 +144,16 @@ minuto, sin consumir tiempo construyendo una imagen destinada a descartarse.
 ### 3.4 Evidencia de ejecución
 
 El *workflow* se ejecutó realmente sobre los *runners* de GitHub. Resultado de la
-ejecución sobre el commit `550ac55` de `main` (duración total: 1 m 1 s):
+ejecución sobre el commit `20fc678` de `main` (duración total: 1 m 1 s):
 
 | Job | Resultado | Duración |
 |---|---|---|
-| Analisis estatico (ESLint) | ✅ success | 14 s |
-| Pruebas (Node 22) | ✅ success | 16 s |
-| Pruebas (Node 24) | ✅ success | 12 s |
-| Auditoria de dependencias | ✅ success | 10 s |
-| Construir imagen Docker | ✅ success | 32 s |
-| Resumen del pipeline | ✅ success | 4 s |
+| Analisis estatico (ESLint) | ✅ success | 11 s |
+| Pruebas (Node 22) | ✅ success | 9 s |
+| Pruebas (Node 24) | ✅ success | 9 s |
+| Auditoria de dependencias | ✅ success | 14 s |
+| Construir imagen Docker | ✅ success | 36 s |
+| Resumen del pipeline | ✅ success | 3 s |
 
 El *job* `Construir imagen Docker` es especialmente relevante como evidencia: no
 solo construyó la imagen a partir del `Dockerfile` multietapa —lo que implica que
@@ -276,13 +276,13 @@ operaciones que requieren un demonio Docker, un registro y un clúster reales
 —inexistentes en el entorno del laboratorio— y ejecutando **de verdad** las etapas
 de dependencias, análisis estático, pruebas, auditoría y prueba de humo.
 
-Resultado de la ejecución (`build #2`, estado **SUCCESS**, 13,8 s):
+Resultado de la ejecución (`build #1`, estado **SUCCESS**, 11,0 s):
 
 ```
 Stage                                    Estado          Duración
 ------------------------------------------------------------------
-Declarative: Checkout SCM                SUCCESS            0.3 s
-Checkout                                 SUCCESS            0.5 s
+Declarative: Checkout SCM                SUCCESS            0.4 s
+Checkout                                 SUCCESS            0.6 s
 Instalar dependencias                    SUCCESS            1.2 s
 Calidad y pruebas                        SUCCESS            0.1 s
   ├─ Analisis estatico                   SUCCESS            1.0 s
@@ -311,7 +311,7 @@ Extracto del log de la etapa de verificación post-despliegue:
 
 OK    /healthz    ->  {"status":"ok","uptimeSeconds":0}
 OK    /readyz     ->  {"status":"ready"}
-OK    /version    ->  {"version":"1.0.0","commit":"de6ebd3...","environment":"development"}
+OK    /version    ->  {"version":"1.0.0","commit":"20fc678...","environment":"development"}
 OK    /api/stats  ->  {"data":{"total":0,"done":0,"pending":0,"completionRate":0}}
 
 Prueba de humo superada: la aplicacion responde correctamente.
@@ -328,7 +328,7 @@ archivados por la ejecución.
 
 ![](img/04-jenkins-consola.png)
 
-**Figura 4.** Consola de la ejecución `#2`, con el resultado de la prueba de humo,
+**Figura 4.** Consola de la ejecución `#1`, con el resultado de la prueba de humo,
 la omisión condicional del *stage* de aprobación y el `Finished: SUCCESS` final.
 
 ## 5. Contenerización
