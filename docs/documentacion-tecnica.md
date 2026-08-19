@@ -143,19 +143,38 @@ minuto, sin consumir tiempo construyendo una imagen destinada a descartarse.
 
 ### 3.4 Evidencia de ejecución
 
-![Ejecución del workflow de CI en GitHub Actions](img/01-github-actions-workflow.png)
+El *workflow* se ejecutó realmente sobre los *runners* de GitHub. Resultado de la
+ejecución sobre el commit `550ac55` de `main` (duración total: 1 m 1 s):
 
-**Figura 1.** Ejecución del *workflow* de CI en la pestaña Actions del repositorio,
-con los cinco *jobs* completados.
+| Job | Resultado | Duración |
+|---|---|---|
+| Analisis estatico (ESLint) | ✅ success | 14 s |
+| Pruebas (Node 22) | ✅ success | 16 s |
+| Pruebas (Node 24) | ✅ success | 12 s |
+| Auditoria de dependencias | ✅ success | 10 s |
+| Construir imagen Docker | ✅ success | 32 s |
+| Resumen del pipeline | ✅ success | 4 s |
 
-![Detalle del job de pruebas](img/02-github-actions-tests.png)
+El *job* `Construir imagen Docker` es especialmente relevante como evidencia: no
+solo construyó la imagen a partir del `Dockerfile` multietapa —lo que implica que
+el *lint* y las pruebas de la etapa `build` también pasaron dentro del
+contenedor— sino que además levantó el contenedor resultante y verificó que
+respondiera en `/healthz`.
 
-**Figura 2.** Detalle del *job* de pruebas, con las 23 pruebas superadas y el
-reporte de cobertura.
+![](img/01-github-actions-workflow.png)
 
-![Resumen del pipeline](img/03-github-actions-summary.png)
+**Figura 1.** Ejecución del *workflow* de CI en la pestaña Actions del repositorio.
+El grafo muestra los seis *jobs* en verde (los cinco definidos, con `test`
+expandido en dos por la matriz de versiones) y las dependencias entre ellos:
+`lint`, `test` y `security` en paralelo, y `build` solo después de los tres.
+Abajo aparecen los artefactos publicados, incluido el reporte de cobertura.
 
-**Figura 3.** Resumen de la ejecución generado con `$GITHUB_STEP_SUMMARY`.
+![](img/02-github-actions-tests.png)
+
+**Figura 2.** Detalle del *job* de pruebas sobre Node 24, con los pasos exigidos
+por la guía completados: *checkout* del código, configuración del entorno,
+instalación de dependencias, ejecución de las pruebas y publicación del reporte
+de cobertura como artefacto.
 
 ## 4. Pipeline de Entrega Continua — Jenkins
 
@@ -301,15 +320,15 @@ Prueba de humo superada: la aplicacion responde correctamente.
 El log completo de la ejecución se incluye en
 [`docs/evidencia-jenkins-consola.txt`](evidencia-jenkins-consola.txt).
 
-![Stage View del pipeline en Jenkins](img/04-jenkins-stage-view.png)
+![](img/03-jenkins-stage-view.png)
 
-**Figura 4.** Vista de *stages* del pipeline en Jenkins. Se aprecian las diez
+**Figura 3.** Vista de *stages* del pipeline en Jenkins. Se aprecian las diez
 etapas definidas, todas en verde, junto con los artefactos de cobertura
 archivados por la ejecución.
 
-![Consola de la ejecución en Jenkins](img/05-jenkins-consola.png)
+![](img/04-jenkins-consola.png)
 
-**Figura 5.** Consola de la ejecución `#2`, con el resultado de la prueba de humo,
+**Figura 4.** Consola de la ejecución `#2`, con el resultado de la prueba de humo,
 la omisión condicional del *stage* de aprobación y el `Finished: SUCCESS` final.
 
 ## 5. Contenerización
