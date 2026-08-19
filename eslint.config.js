@@ -28,4 +28,12 @@ module.exports = [
       globals: { ...globals.node, ...globals.jest },
     },
   },
+  {
+    // Los scripts de linea de comandos reportan su resultado por consola:
+    // la regla no-console no aplica a ellos.
+    files: ['scripts/**/*.js'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 ];

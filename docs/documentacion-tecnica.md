@@ -141,14 +141,19 @@ minuto, sin consumir tiempo construyendo una imagen destinada a descartarse.
 
 ### 3.4 Evidencia de ejecución
 
-> **Figura 1.** Ejecución del *workflow* de CI en la pestaña Actions del repositorio,
-> con los cinco *jobs* completados. — `docs/img/01-github-actions-workflow.png`
+![Ejecución del workflow de CI en GitHub Actions](img/01-github-actions-workflow.png)
 
-> **Figura 2.** Detalle del *job* de pruebas mostrando las 23 pruebas superadas y el
-> reporte de cobertura. — `docs/img/02-github-actions-tests.png`
+**Figura 1.** Ejecución del *workflow* de CI en la pestaña Actions del repositorio,
+con los cinco *jobs* completados.
 
-> **Figura 3.** Resumen del pipeline generado con `$GITHUB_STEP_SUMMARY`.
-> — `docs/img/03-github-actions-summary.png`
+![Detalle del job de pruebas](img/02-github-actions-tests.png)
+
+**Figura 2.** Detalle del *job* de pruebas, con las 23 pruebas superadas y el
+reporte de cobertura.
+
+![Resumen del pipeline](img/03-github-actions-summary.png)
+
+**Figura 3.** Resumen de la ejecución generado con `$GITHUB_STEP_SUMMARY`.
 
 ## 4. Pipeline de Entrega Continua — Jenkins
 
@@ -181,7 +186,31 @@ demás se añadieron porque un pipeline de entrega que solo construye y publica 
 sin resolver la parte más delicada del problema: **verificar el despliegue y poder
 deshacerlo**.
 
-### 4.2 Despliegue agnóstico al entorno
+### 4.2 Requisitos del controlador Jenkins
+
+El `Jenkinsfile` se validó con el *linter* declarativo de Jenkins
+(`POST /pipeline-model-converter/validate`), que confirmó **`Jenkinsfile
+successfully validated`** sobre Jenkins 2.568.2 LTS. Esa validación exige tener
+instalados los siguientes *plugins*, que constituyen los requisitos previos para
+ejecutar el pipeline:
+
+| Plugin | Uso dentro del `Jenkinsfile` |
+|---|---|
+| `workflow-aggregator` | Soporte de *pipeline* declarativo |
+| `git` | `checkout scm` |
+| `github` | Disparador `triggers { githubPush() }` |
+| `docker-workflow` | `docker.build`, `docker.withRegistry`, `image.push()` |
+| `credentials-binding` | `withCredentials` para el `kubeconfig` |
+| `timestamper` | Opción `timestamps()` |
+| `ws-cleanup` | `cleanWs()` en el bloque `post` |
+| `pipeline-stage-view` | Visualización de *stages* (Figura 4) |
+
+Además, el agente que ejecute el pipeline debe disponer de `node`/`npm`, un
+demonio Docker accesible, y los binarios `trivy` y `kubectl` en el `PATH`, junto
+con las credenciales `dockerhub-credentials` y `kubeconfig-credentials`
+registradas en Jenkins.
+
+### 4.3 Despliegue agnóstico al entorno
 
 El parámetro `DEPLOY_ENV` (`dev` / `staging` / `prod`) determina el *namespace* de
 destino, y **el mismo pipeline sirve para los tres entornos** sin duplicar
@@ -190,7 +219,7 @@ promueve**. Lo que se validó en `dev` es exactamente el mismo binario que llega
 producción, lo que elimina por diseño la clase entera de fallos "funcionaba en
 *staging*".
 
-### 4.3 Gestión de secretos
+### 4.4 Gestión de secretos
 
 Ninguna credencial aparece en el código. El pipeline referencia identificadores de
 credenciales almacenadas en Jenkins (`dockerhub-credentials`,
@@ -199,7 +228,7 @@ credenciales almacenadas en Jenkins (`dockerhub-credentials`,
 log**. Este es el requisito mínimo para que un `Jenkinsfile` pueda vivir en un
 repositorio.
 
-### 4.4 Manejo de fallos y recuperación
+### 4.5 Manejo de fallos y recuperación
 
 ```groovy
 post {
@@ -216,7 +245,7 @@ El bloque `post { failure }` ejecuta `kubectl rollout undo`, devolviendo el
 esto acota directamente el **tiempo medio de recuperación (MTTR)**, una de las
 cuatro métricas DORA.
 
-### 4.5 Evidencia de ejecución
+### 4.6 Evidencia de ejecución
 
 Para generar evidencias reales se levantó una instancia local de **Jenkins 2.568.2
 LTS** y se configuró el *job* `devops-task-api-cd` como *pipeline from SCM*
@@ -270,11 +299,16 @@ Prueba de humo superada: la aplicacion responde correctamente.
 El log completo de la ejecución se incluye en
 [`docs/evidencia-jenkins-consola.txt`](evidencia-jenkins-consola.txt).
 
-> **Figura 4.** Vista de *stages* del pipeline en Jenkins, con las diez etapas.
-> — `docs/img/04-jenkins-stage-view.png`
+![Stage View del pipeline en Jenkins](img/04-jenkins-stage-view.png)
 
-> **Figura 5.** Consola de la ejecución `#2` mostrando el resultado SUCCESS.
-> — `docs/img/05-jenkins-consola.png`
+**Figura 4.** Vista de *stages* del pipeline en Jenkins. Se aprecian las diez
+etapas definidas, todas en verde, junto con los artefactos de cobertura
+archivados por la ejecución.
+
+![Consola de la ejecución en Jenkins](img/05-jenkins-consola.png)
+
+**Figura 5.** Consola de la ejecución `#2`, con el resultado de la prueba de humo,
+la omisión condicional del *stage* de aprobación y el `Finished: SUCCESS` final.
 
 ## 5. Contenerización
 
