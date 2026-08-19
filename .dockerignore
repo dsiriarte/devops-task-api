@@ -1,0 +1,8 @@
+node_modules
+coverage
+.git
+.github
+docs
+k8s
+*.md
+.DS_Store

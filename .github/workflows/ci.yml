@@ -1,0 +1,171 @@
+# ---------------------------------------------------------------------------
+# Pipeline de Integracion Continua (CI)
+# Universidad de La Sabana - Fundamentos DevOps - Unidad 2, Actividad 3
+#
+# Se dispara automaticamente ante cada push y cada pull request sobre main
+# y develop. Implementa las etapas exigidas por la guia: checkout del codigo,
+# instalacion de dependencias, ejecucion de pruebas y analisis estatico.
+# ---------------------------------------------------------------------------
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # permite ejecutarlo manualmente desde la pestana Actions
+
+# Cancela ejecuciones anteriores de la misma rama para no gastar minutos
+# de runner en commits que ya fueron superados.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # -------------------------------------------------------------------------
+  # 1. Analisis estatico de codigo (ESLint)
+  # -------------------------------------------------------------------------
+  lint:
+    name: Analisis estatico (ESLint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar ESLint
+        run: npm run lint
+
+  # -------------------------------------------------------------------------
+  # 2. Pruebas automatizadas sobre una matriz de versiones de Node
+  # -------------------------------------------------------------------------
+  test:
+    name: Pruebas (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20', '22']
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar pruebas unitarias y de integracion
+        run: npm test
+
+      - name: Publicar reporte de cobertura como artefacto
+        if: matrix.node-version == '22'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # 3. Analisis de vulnerabilidades en dependencias (DevSecOps)
+  # -------------------------------------------------------------------------
+  security:
+    name: Auditoria de dependencias
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: npm audit (falla ante vulnerabilidades altas o criticas)
+        run: npm audit --audit-level=high
+
+  # -------------------------------------------------------------------------
+  # 4. Construccion de la imagen Docker
+  #    Valida que el artefacto que consumira el pipeline de CD sea construible.
+  #    En CI solo se construye y se verifica: la publicacion es tarea del CD.
+  # -------------------------------------------------------------------------
+  build:
+    name: Construir imagen Docker
+    runs-on: ubuntu-latest
+    needs: [lint, test, security]
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Construir la imagen (sin publicar)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: devops-task-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Prueba de humo del contenedor
+        run: |
+          docker run -d --name smoke -p 3000:3000 devops-task-api:${{ github.sha }}
+          for i in $(seq 1 15); do
+            if curl -sf http://localhost:3000/healthz > /dev/null; then
+              echo "La aplicacion respondio correctamente en /healthz"
+              curl -s http://localhost:3000/healthz
+              docker rm -f smoke
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "El contenedor no respondio a tiempo"
+          docker logs smoke
+          docker rm -f smoke
+          exit 1
+
+  # -------------------------------------------------------------------------
+  # 5. Resumen del pipeline en la interfaz de GitHub Actions
+  # -------------------------------------------------------------------------
+  summary:
+    name: Resumen del pipeline
+    runs-on: ubuntu-latest
+    needs: [lint, test, security, build]
+    if: always()
+    steps:
+      - name: Escribir el resumen de la ejecucion
+        run: |
+          {
+            echo "## Resultado del pipeline de CI"
+            echo ""
+            echo "| Etapa | Resultado |"
+            echo "|-------|-----------|"
+            echo "| Analisis estatico (ESLint) | ${{ needs.lint.result }} |"
+            echo "| Pruebas automatizadas | ${{ needs.test.result }} |"
+            echo "| Auditoria de dependencias | ${{ needs.security.result }} |"
+            echo "| Imagen Docker | ${{ needs.build.result }} |"
+            echo ""
+            echo "Commit: \`${{ github.sha }}\` - Rama: \`${{ github.ref_name }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
