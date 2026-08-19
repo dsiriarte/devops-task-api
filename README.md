@@ -305,7 +305,11 @@ automático y observabilidad).
 
 - [`docs/documentacion-tecnica.md`](docs/documentacion-tecnica.md) — documento
   técnico completo de la entrega.
+- [`docs/Documentacion_Tecnica_Actividad3.pdf`](docs/Documentacion_Tecnica_Actividad3.pdf)
+  — el mismo documento en PDF, con las figuras incrustadas.
 - [`docs/img/`](docs/img/) — capturas de la ejecución de ambos pipelines.
+- [`docs/evidencia-jenkins-consola.txt`](docs/evidencia-jenkins-consola.txt) — log
+  completo de la ejecución del pipeline de Jenkins.
 
 ---
 
