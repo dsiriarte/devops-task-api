@@ -4,7 +4,7 @@
   "description": "Aplicacion web de ejemplo (API + UI) para el laboratorio de CI/CD - Fundamentos DevOps, Universidad de La Sabana",
   "main": "src/server.js",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "start": "node src/server.js",

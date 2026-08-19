@@ -6,7 +6,7 @@
 
 **Autor:** David Santiago Iriarte Zamora
 **Fecha:** 18 de agosto de 2026
-**Repositorio:** `https://github.com/<usuario>/devops-task-api`
+**Repositorio:** https://github.com/dsiriarte/devops-task-api
 
 ---
 
@@ -41,7 +41,7 @@ no la complejidad del dominio.
 
 | Componente | Tecnología | Justificación |
 |---|---|---|
-| Runtime | Node.js 22 LTS | Arranque rápido y ecosistema maduro de *tooling* para CI |
+| Runtime | Node.js 24 LTS | Arranque rápido y ecosistema maduro de *tooling* para CI |
 | Framework web | Express 4 | Estándar de facto, mínimo *overhead* |
 | Pruebas | Jest + Supertest | Cobertura integrada con umbrales; Supertest prueba la API sin abrir puertos |
 | Análisis estático | ESLint 9 (*flat config*) | Detección temprana de errores y homogeneidad de estilo |
@@ -110,7 +110,7 @@ bloque `concurrency` cancela ejecuciones previas de la misma rama, de modo que u
 | Job | Contenido | Requisito de la guía |
 |---|---|---|
 | **`lint`** | Checkout → Node 22 → `npm ci` → `npm run lint` | Análisis estático (opcional) |
-| **`test`** | Checkout → Node 20 y 22 (matriz) → `npm ci` → `npm test` → artefacto de cobertura | Checkout, dependencias, **pruebas** |
+| **`test`** | Checkout → Node 22 y 24 (matriz) → `npm ci` → `npm test` → artefacto de cobertura | Checkout, dependencias, **pruebas** |
 | **`security`** | Checkout → `npm audit --audit-level=high` | Extensión DevSecOps |
 | **`build`** | Buildx → construir imagen → *smoke test* del contenedor | Extensión: validación del artefacto |
 | **`summary`** | Tabla de resultados en el resumen de la ejecución | Retroalimentación |
@@ -126,8 +126,10 @@ minuto, sin consumir tiempo construyendo una imagen destinada a descartarse.
   en `package-lock.json` y falla si el *lockfile* está desincronizado. Es lo que
   hace que la construcción sea **reproducible**: el mismo *commit* produce siempre
   el mismo árbol de dependencias.
-- **Matriz de versiones (Node 20 y 22).** Verifica compatibilidad con la LTS actual
-  y la anterior, anticipando la migración del entorno de producción.
+- **Matriz de versiones (Node 22 y 24).** Verifica el comportamiento sobre las dos
+  versiones LTS vigentes. Se descartó deliberadamente Node 20, que alcanzó su fin de
+  vida el 30 de abril de 2026: probar contra un *runtime* sin soporte da una falsa
+  sensación de compatibilidad y no aporta información útil.
 - **`cache: 'npm'` en `setup-node`.** Reutiliza el caché de dependencias entre
   ejecuciones, reduciendo el tiempo del pipeline y, con él, el *lead time*.
 - **`permissions: contents: read`.** Principio de mínimo privilegio sobre el token
@@ -317,7 +319,7 @@ El `Dockerfile` emplea un **build multietapa**:
 1. **Etapa `build`** — instala todas las dependencias y ejecuta `npm run lint` y
    `npm test`. Si la calidad no pasa, **la imagen no llega a existir**. Es una
    puerta de calidad adicional, independiente del pipeline.
-2. **Etapa `runtime`** — parte de `node:22-alpine` limpia, instala solo
+2. **Etapa `runtime`** — parte de `node:24-alpine` limpia, instala solo
    dependencias de producción (`npm ci --omit=dev`) y copia únicamente `src/` y
    `public/`.
 

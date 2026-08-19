@@ -14,7 +14,7 @@ aplicación en un clúster de Kubernetes.
 |---|---|
 | **Autor** | David Santiago Iriarte Zamora |
 | **Asignatura** | Fundamentos DevOps — Unidad 2, Actividad 3 |
-| **Stack** | Node.js 22 · Express · Jest · ESLint · Docker · Kubernetes |
+| **Stack** | Node.js 24 · Express · Jest · ESLint · Docker · Kubernetes |
 | **CI** | GitHub Actions (`.github/workflows/ci.yml`) |
 | **CD** | Jenkins (`Jenkinsfile`) |
 
@@ -95,7 +95,7 @@ docker run -p 3000:3000 devops-task-api:local
        │                          │                              ├─ Checkout
        │                          │                              ├─ Instalar dependencias
        │                          │                              ├─ ESLint (análisis estático)
-       │                          │                              ├─ Jest (Node 20 y 22)
+       │                          │                              ├─ Jest (Node 22 y 24)
        │                          │                              ├─ npm audit (seguridad)
        │                          │                              └─ Build + smoke test Docker
        │                          │                                        │
@@ -151,7 +151,7 @@ no consumir minutos de *runner* en *commits* ya superados.
 | Job | Qué hace | Por qué está |
 |---|---|---|
 | **`lint`** | ESLint sobre todo el código | Análisis estático: detecta errores y malas prácticas antes de ejecutar nada |
-| **`test`** | Jest con cobertura, en matriz Node 20 y 22 | Verifica el comportamiento y confirma compatibilidad con la versión LTS actual y la anterior |
+| **`test`** | Jest con cobertura, en matriz Node 22 y 24 | Verifica el comportamiento sobre las dos versiones LTS vigentes (Node 20 alcanzó su fin de vida en abril de 2026) |
 | **`security`** | `npm audit --audit-level=high` | DevSecOps: falla el *build* ante vulnerabilidades altas o críticas en dependencias |
 | **`build`** | Construye la imagen Docker y le hace *smoke test* | Garantiza que el artefacto que consumirá el CD es construible y arranca |
 | **`summary`** | Publica una tabla de resultados | Retroalimentación legible en la propia interfaz de Actions |
@@ -237,7 +237,7 @@ El [`Dockerfile`](Dockerfile) usa un **build multietapa**:
 
 1. **Etapa `build`** — instala todas las dependencias y ejecuta *lint* y pruebas.
    Si algo falla, la imagen no llega a existir.
-2. **Etapa `runtime`** — parte de `node:22-alpine` limpia, instala solo
+2. **Etapa `runtime`** — parte de `node:24-alpine` limpia, instala solo
    dependencias de producción (`npm ci --omit=dev`) y copia únicamente `src/` y
    `public/`.
 

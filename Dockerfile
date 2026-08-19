@@ -2,7 +2,7 @@
 # Build multietapa: la primera etapa instala dependencias y ejecuta pruebas,
 # la segunda produce una imagen final minima solo con lo necesario para correr.
 # ---------------------------------------------------------------------------
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY . .
 RUN npm run lint && npm test
 
 # ---------------------------------------------------------------------------
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 
 ENV NODE_ENV=production
 WORKDIR /app
