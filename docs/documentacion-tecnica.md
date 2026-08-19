@@ -1,14 +1,48 @@
-# Documentación técnica — Laboratorio técnico CI/CD
+# Pipelines CI/CD para una aplicación web sobre Kubernetes
 
-**Universidad de La Sabana — Fundamentos DevOps**
-**Unidad 2: Flujos de entrega eficientes: CI/CD y automatización**
-**Actividad 3 — Laboratorio técnico (Evaluativa)**
+*Documentación técnica del laboratorio*
 
-**Autor:** David Santiago Iriarte Zamora
-**Fecha:** 18 de agosto de 2026
-**Repositorio:** https://github.com/dsiriarte/devops-task-api
+| | |
+|---|---|
+| **Institución** | Universidad de La Sabana |
+| **Asignatura** | Fundamentos DevOps |
+| **Unidad** | 2 — Flujos de entrega eficientes: CI/CD y automatización |
+| **Actividad** | 3 — Laboratorio técnico |
+| **Autor** | David Santiago Iriarte Zamora |
+| **Fecha** | 18 de agosto de 2026 |
+| **Repositorio** | https://github.com/dsiriarte/devops-task-api |
 
 ---
+
+## Contenido
+
+- [1. Objetivo del laboratorio](#objetivo-del-laboratorio)
+- [2. Aplicación construida](#aplicación-construida)
+  - [Cobertura de pruebas obtenida](#cobertura-de-pruebas-obtenida)
+- [3. Pipeline de Integración Continua — GitHub Actions](#pipeline-de-integración-continua-github-actions)
+  - [3.1 Activación automática](#activación-automática)
+  - [3.2 Etapas del pipeline](#etapas-del-pipeline)
+  - [3.3 Decisiones técnicas y su fundamento](#decisiones-técnicas-y-su-fundamento)
+  - [3.4 Evidencia de ejecución](#evidencia-de-ejecución)
+- [4. Pipeline de Entrega Continua — Jenkins](#pipeline-de-entrega-continua-jenkins)
+  - [4.1 Stages definidos](#stages-definidos)
+  - [4.2 Requisitos del controlador Jenkins](#requisitos-del-controlador-jenkins)
+  - [4.3 Despliegue agnóstico al entorno](#despliegue-agnóstico-al-entorno)
+  - [4.4 Gestión de secretos](#gestión-de-secretos)
+  - [4.5 Manejo de fallos y recuperación](#manejo-de-fallos-y-recuperación)
+  - [4.6 Evidencia de ejecución](#evidencia-de-ejecución-1)
+- [5. Contenerización](#contenerización)
+- [6. Manifiestos de Kubernetes](#manifiestos-de-kubernetes)
+- [7. Justificación de las herramientas seleccionadas](#justificación-de-las-herramientas-seleccionadas)
+  - [¿Por qué dos herramientas de CI/CD y no una sola?](#por-qué-dos-herramientas-de-cicd-y-no-una-sola)
+- [8. Relación con los principios DevOps](#relación-con-los-principios-devops)
+  - [Impacto sobre las métricas DORA](#impacto-sobre-las-métricas-dora)
+- [9. Continuidad con la arquitectura previa y fases siguientes](#continuidad-con-la-arquitectura-previa-y-fases-siguientes)
+- [10. Conclusiones](#conclusiones)
+- [Referencias](#referencias)
+
+---
+
 
 ## 1. Objetivo del laboratorio
 
@@ -20,12 +54,12 @@ alojado en GitHub y cuyo destino de despliegue es un clúster de Kubernetes:
 - **CD (Entrega Continua) con Jenkins** — definir los *stages* del pipeline de
   despliegue de forma agnóstica al entorno de destino.
 
-Esta entrega corresponde a la **primera fase del proyecto del módulo**: la
-estructuración de los pipelines. Las fases posteriores abordarán la implementación
-real sobre Kubernetes, los conectores de seguridad y la habilitación del monitoreo.
-Por ello el diseño ya deja previstos —y documentados— los puntos de extensión hacia
-esas fases: escaneo con Trivy, manifiestos de Kubernetes con sondas y contexto de
-seguridad, y anotaciones de Prometheus en el *deployment*.
+Este trabajo cubre la **primera fase del proyecto**: la estructuración de ambos
+pipelines. Las fases posteriores abordarán la implementación real sobre Kubernetes,
+los conectores de seguridad y la habilitación del monitoreo. Por eso el diseño deja
+ya previstos y documentados los puntos de extensión hacia ellas: el escaneo con
+Trivy, los manifiestos de Kubernetes con sondas y contexto de seguridad, y las
+anotaciones de Prometheus en el *deployment*.
 
 ## 2. Aplicación construida
 
@@ -100,20 +134,20 @@ concurrency:
 ```
 
 El pipeline se dispara **automáticamente** ante cada `push` a `main` o `develop` y
-ante cada *pull request* dirigido a `main`, cumpliendo el requisito de la guía.
-`workflow_dispatch` permite además lanzarlo manualmente desde la interfaz. El
+ante cada *pull request* dirigido a `main`; `workflow_dispatch` permite además
+lanzarlo manualmente desde la interfaz. El
 bloque `concurrency` cancela ejecuciones previas de la misma rama, de modo que un
 `push` correctivo no espera a que termine el *build* del *commit* que corrige.
 
 ### 3.2 Etapas del pipeline
 
-| Job | Contenido | Requisito de la guía |
+| Job | Contenido | Qué protege |
 |---|---|---|
-| **`lint`** | Checkout → Node 22 → `npm ci` → `npm run lint` | Análisis estático (opcional) |
-| **`test`** | Checkout → Node 22 y 24 (matriz) → `npm ci` → `npm test` → artefacto de cobertura | Checkout, dependencias, **pruebas** |
-| **`security`** | Checkout → `npm audit --audit-level=high` | Extensión DevSecOps |
-| **`build`** | Buildx → construir imagen → *smoke test* del contenedor | Extensión: validación del artefacto |
-| **`summary`** | Tabla de resultados en el resumen de la ejecución | Retroalimentación |
+| **`lint`** | Checkout → Node 24 → `npm ci` → `npm run lint` | Detiene el pipeline ante errores de estilo o construcciones sospechosas, antes de gastar tiempo en nada más |
+| **`test`** | Checkout → Node 22 y 24 (matriz) → `npm ci` → `npm test` → artefacto de cobertura | Verifica el comportamiento sobre las dos LTS vigentes y deja la cobertura como evidencia descargable |
+| **`security`** | Checkout → `npm audit --audit-level=high` | Impide que lleguen a producción dependencias con vulnerabilidades altas o críticas |
+| **`build`** | Buildx → construir imagen → *smoke test* del contenedor | Confirma que el artefacto que consumirá el CD es construible y arranca de verdad |
+| **`summary`** | Tabla de resultados en el resumen de la ejecución | Da una lectura inmediata del estado sin abrir los logs |
 
 Los tres primeros *jobs* se ejecutan **en paralelo**; `build` declara
 `needs: [lint, test, security]` y solo arranca si los tres pasan. La consecuencia
@@ -171,20 +205,21 @@ Abajo aparecen los artefactos publicados, incluido el reporte de cobertura.
 
 ![](img/02-github-actions-tests.png)
 
-**Figura 2.** Detalle del *job* de pruebas sobre Node 24, con los pasos exigidos
-por la guía completados: *checkout* del código, configuración del entorno,
-instalación de dependencias, ejecución de las pruebas y publicación del reporte
-de cobertura como artefacto.
+**Figura 2.** Detalle del *job* de pruebas sobre Node 24, con la secuencia
+completa: *checkout* del código, configuración del entorno, instalación de
+dependencias, ejecución de las pruebas y publicación del reporte de cobertura
+como artefacto.
 
 ## 4. Pipeline de Entrega Continua — Jenkins
 
 **Archivo:** `Jenkinsfile` (*pipeline declarativo*)
 
-Conforme a la guía, en este pipeline lo evaluable es **la definición de los
-stages**. Se optó por un `Jenkinsfile` declarativo versionado junto al código
-(*pipeline as code*), de modo que el proceso de despliegue evoluciona con la
-aplicación, se revisa en los mismos *pull requests* y queda auditado en el
-historial de Git.
+El proceso de entrega se definió como un `Jenkinsfile` declarativo versionado
+junto al código (*pipeline as code*). La alternativa —configurar los pasos a mano
+en la interfaz de Jenkins— deja el proceso fuera del control de versiones: no se
+revisa, no se puede reproducir y nadie sabe por qué cambió. Al vivir en el
+repositorio, el pipeline evoluciona con la aplicación, se revisa en los mismos
+*pull requests* y queda auditado en el historial de Git.
 
 ### 4.1 Stages definidos
 
@@ -201,11 +236,10 @@ historial de Git.
 | 9 | **Verificación post-despliegue** | *Smoke test* contra el servicio ya desplegado, mediante un pod efímero `curlimages/curl` |
 | 10 | **Aprobación para producción** | Puerta manual con `input`, activa solo cuando `DEPLOY_ENV == 'prod'` |
 
-Los requisitos mínimos de la guía —clonar el repositorio, construir una imagen
-Docker y publicarla en un registro— corresponden a los *stages* 1, 4 y 6. Los
-demás se añadieron porque un pipeline de entrega que solo construye y publica deja
-sin resolver la parte más delicada del problema: **verificar el despliegue y poder
-deshacerlo**.
+El núcleo del flujo —clonar el repositorio, construir la imagen y publicarla en
+el registro— lo forman los *stages* 1, 4 y 6. El resto existe porque un pipeline que
+solo construye y publica deja sin resolver la parte más delicada del problema:
+**verificar que el despliegue funcionó y poder deshacerlo cuando no**.
 
 ### 4.2 Requisitos del controlador Jenkins
 
@@ -391,8 +425,8 @@ organización.
 Esta combinación refleja lo que ocurre en muchas organizaciones reales, donde la CI
 vive junto al repositorio y el CD lo gobierna una plataforma corporativa con acceso
 a la red de producción. También es coherente con la **separación entre CI y CD**
-que recomiendan las prácticas actuales de GitOps y que se propuso en la Actividad 2
-de esta misma unidad: la integración es **síncrona** ante un *commit* y busca
+que recomiendan las prácticas actuales de GitOps y que se planteó en el informe de
+arquitectura previo: la integración es **síncrona** ante un *commit* y busca
 retroalimentación rápida; la entrega es **asíncrona** ante un cambio del estado
 deseado y busca fiabilidad.
 
@@ -424,11 +458,11 @@ habilita la experimentación segura y la mejora iterativa del propio proceso.
 | **Tasa de fallos en cambios** | Pruebas, análisis estático, auditoría y escaneo como puertas de calidad previas al despliegue |
 | **Tiempo de recuperación (MTTR)** | `rollout undo` automático, `rollout status` con *timeout* y sondas de Kubernetes |
 
-## 9. Relación con la Actividad 2 y con las fases siguientes
+## 9. Continuidad con la arquitectura previa y fases siguientes
 
 Este laboratorio **implementa** el tramo Build → Test/Security → Release de la
-arquitectura DevOps diseñada en la Actividad 2 de esta misma unidad, respetando las
-herramientas allí seleccionadas y justificadas: GitHub y GitHub Actions para la
+arquitectura DevOps diseñada en el informe previo de esta misma unidad, respetando
+las herramientas allí seleccionadas y justificadas: GitHub y GitHub Actions para la
 integración, Docker para el empaquetado, Jenkins para la orquestación de la
 entrega, Trivy para el escaneo, y Kubernetes como destino de despliegue.
 

@@ -124,7 +124,7 @@ forma síncrona ante cada *commit* y su objetivo es dar retroalimentación rápi
 al desarrollador; la entrega se ejecuta después, sobre código ya validado, y su
 objetivo es promover un artefacto inmutable entre entornos. Esta separación es la
 que recomiendan las prácticas actuales de GitOps y es la que se refleja en la
-arquitectura propuesta en la Actividad 2 de esta misma unidad.
+arquitectura propuesta en el informe previo de esta misma unidad.
 
 ---
 
@@ -178,10 +178,9 @@ Decisiones técnicas relevantes:
 
 **Archivo:** [`Jenkinsfile`](Jenkinsfile) — *pipeline declarativo*
 
-Conforme a la guía de la actividad, lo evaluable aquí es **la definición de los
-stages**. El pipeline está escrito como `Jenkinsfile` declarativo y versionado
-junto al código (*pipeline as code*), de modo que el proceso de despliegue
-evoluciona con la aplicación y queda auditado en el historial de Git.
+El pipeline está escrito como `Jenkinsfile` declarativo y versionado junto al
+código (*pipeline as code*), de modo que el proceso de despliegue evoluciona con
+la aplicación y queda auditado en el historial de Git.
 
 ### Stages definidos
 
