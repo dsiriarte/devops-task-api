@@ -1,0 +1,319 @@
+Started by user admin
+Checking out git file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD into /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd@script/159f6dfb7bed2fba8bbfbc398fb3f0a7d699da72eb3c227448b9f885b684b42f to read jenkins/Jenkinsfile.demo
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git init /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd@script/159f6dfb7bed2fba8bbfbc398fb3f0a7d699da72eb3c227448b9f885b684b42f # timeout=10
+Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1 (Apple Git-155)'
+ > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 # timeout=10
+Commit message: "feat: aplicacion web con pipelines CI/CD"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git init /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd # timeout=10
+Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1 (Apple Git-155)'
+ > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 # timeout=10
+Commit message: "feat: aplicacion web con pipelines CI/CD"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timeout
+Timeout set to expire in 20 min
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] echo
+[2026-08-19T02:19:24.857Z] === STAGE 1: Clonando el repositorio ===
+[Pipeline] checkout
+[2026-08-19T02:19:24.883Z] The recommended git tool is: NONE
+[2026-08-19T02:19:24.883Z] No credentials specified
+[2026-08-19T02:19:24.883Z]  > git rev-parse --resolve-git-dir /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd/.git # timeout=10
+[2026-08-19T02:19:24.898Z] Fetching changes from the remote Git repository
+[2026-08-19T02:19:24.900Z]  > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD # timeout=10
+[2026-08-19T02:19:24.914Z] Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+[2026-08-19T02:19:24.914Z]  > git --version # timeout=10
+[2026-08-19T02:19:24.926Z]  > git --version # 'git version 2.50.1 (Apple Git-155)'
+[2026-08-19T02:19:24.926Z]  > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-08-19T02:19:24.952Z]  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+[2026-08-19T02:19:24.964Z] Checking out Revision de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 (refs/remotes/origin/main)
+[2026-08-19T02:19:24.964Z]  > git config core.sparsecheckout # timeout=10
+[2026-08-19T02:19:24.976Z]  > git checkout -f de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8 # timeout=10
+[2026-08-19T02:19:24.992Z] Commit message: "feat: aplicacion web con pipelines CI/CD"
+[Pipeline] sh
+[2026-08-19T02:19:25.294Z] + ls -la
+[2026-08-19T02:19:25.294Z] total 504
+[2026-08-19T02:19:25.294Z] drwxr-xr-x@ 18 santiagoiriarte  wheel     576 Aug 18 21:19 .
+[2026-08-19T02:19:25.294Z] drwxr-xr-x@  5 santiagoiriarte  wheel     160 Aug 18 21:19 ..
+[2026-08-19T02:19:25.294Z] -rw-r--r--@  1 santiagoiriarte  wheel      59 Aug 18 21:19 .dockerignore
+[2026-08-19T02:19:25.294Z] drwxr-xr-x@ 12 santiagoiriarte  wheel     384 Aug 18 21:19 .git
+[2026-08-19T02:19:25.294Z] drwxr-xr-x@  3 santiagoiriarte  wheel      96 Aug 18 21:19 .github
+[2026-08-19T02:19:25.294Z] -rw-r--r--@  1 santiagoiriarte  wheel      59 Aug 18 21:19 .gitignore
+[2026-08-19T02:19:25.294Z] -rw-r--r--@  1 santiagoiriarte  wheel    1177 Aug 18 21:19 Dockerfile
+[2026-08-19T02:19:25.294Z] -rw-r--r--@  1 santiagoiriarte  wheel   13234 Aug 18 21:19 Jenkinsfile
+[2026-08-19T02:19:25.295Z] -rw-r--r--@  1 santiagoiriarte  wheel   16775 Aug 18 21:19 README.md
+[2026-08-19T02:19:25.295Z] -rw-r--r--@  1 santiagoiriarte  wheel     658 Aug 18 21:19 eslint.config.js
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  3 santiagoiriarte  wheel      96 Aug 18 21:19 jenkins
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  5 santiagoiriarte  wheel     160 Aug 18 21:19 k8s
+[2026-08-19T02:19:25.295Z] -rw-r--r--@  1 santiagoiriarte  wheel  200455 Aug 18 21:19 package-lock.json
+[2026-08-19T02:19:25.295Z] -rw-r--r--@  1 santiagoiriarte  wheel    1186 Aug 18 21:19 package.json
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  3 santiagoiriarte  wheel      96 Aug 18 21:19 public
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  3 santiagoiriarte  wheel      96 Aug 18 21:19 scripts
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  6 santiagoiriarte  wheel     192 Aug 18 21:19 src
+[2026-08-19T02:19:25.295Z] drwxr-xr-x@  5 santiagoiriarte  wheel     160 Aug 18 21:19 tests
+[2026-08-19T02:19:25.295Z] + git log --oneline -1
+[2026-08-19T02:19:25.295Z] de6ebd3 feat: aplicacion web con pipelines CI/CD
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Instalar dependencias)
+[Pipeline] echo
+[2026-08-19T02:19:25.433Z] === STAGE 2: Instalando dependencias (npm ci) ===
+[Pipeline] sh
+[2026-08-19T02:19:25.719Z] + npm ci
+[2026-08-19T02:19:26.273Z] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[2026-08-19T02:19:26.273Z] npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[2026-08-19T02:19:26.530Z] 
+[2026-08-19T02:19:26.530Z] added 421 packages, and audited 422 packages in 784ms
+[2026-08-19T02:19:26.530Z] 
+[2026-08-19T02:19:26.530Z] 69 packages are looking for funding
+[2026-08-19T02:19:26.530Z]   run `npm fund` for details
+[2026-08-19T02:19:26.530Z] 
+[2026-08-19T02:19:26.530Z] found 0 vulnerabilities
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Calidad y pruebas)
+[Pipeline] parallel
+[Pipeline] { (Branch: Analisis estatico)
+[Pipeline] { (Branch: Pruebas automatizadas)
+[Pipeline] stage
+[Pipeline] { (Analisis estatico)
+[Pipeline] stage
+[Pipeline] { (Pruebas automatizadas)
+[Pipeline] echo
+[2026-08-19T02:19:26.846Z] === STAGE 3a: Analisis estatico con ESLint ===
+[Pipeline] sh
+[Pipeline] echo
+[2026-08-19T02:19:26.900Z] === STAGE 3b: Pruebas unitarias y de integracion ===
+[Pipeline] sh
+[2026-08-19T02:19:27.129Z] + npm run lint
+[2026-08-19T02:19:27.129Z] 
+[2026-08-19T02:19:27.129Z] > devops-task-api@1.0.0 lint
+[2026-08-19T02:19:27.129Z] > eslint .
+[2026-08-19T02:19:27.129Z] 
+[2026-08-19T02:19:27.179Z] + npm test
+[2026-08-19T02:19:27.179Z] 
+[2026-08-19T02:19:27.179Z] > devops-task-api@1.0.0 test
+[2026-08-19T02:19:27.179Z] > jest --coverage --runInBand
+[2026-08-19T02:19:27.179Z] 
+[2026-08-19T02:19:27.690Z] 
+[2026-08-19T02:19:27.690Z] /private/tmp/claude-501/-Users-santiagoiriarte-Documents-Maestria-Fundamento-de-devops/b8239c1e-1f32-4461-b616-7c0b176c7d79/scratchpad/jenkins_home/workspace/devops-task-api-cd/scripts/smoke-test.js
+[2026-08-19T02:19:27.690Z]   34:7  warning  Unexpected console statement  no-console
+[2026-08-19T02:19:27.690Z]   39:7  warning  Unexpected console statement  no-console
+[2026-08-19T02:19:27.690Z]   47:5  warning  Unexpected console statement  no-console
+[2026-08-19T02:19:27.690Z]   50:3  warning  Unexpected console statement  no-console
+[2026-08-19T02:19:27.690Z] 
+[2026-08-19T02:19:27.690Z] ✖ 4 problems (0 errors, 4 warnings)
+[2026-08-19T02:19:27.690Z] 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[2026-08-19T02:19:28.099Z] PASS tests/tasks.api.test.js
+[2026-08-19T02:19:28.099Z] PASS tests/taskStore.test.js
+[2026-08-19T02:19:28.099Z] PASS tests/health.test.js
+[2026-08-19T02:19:28.099Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-19T02:19:28.099Z] File           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+[2026-08-19T02:19:28.099Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-19T02:19:28.099Z] All files      |     100 |    84.37 |     100 |     100 |                   
+[2026-08-19T02:19:28.099Z]  src           |     100 |       50 |     100 |     100 |                   
+[2026-08-19T02:19:28.099Z]   app.js       |     100 |       50 |     100 |     100 | 30-32             
+[2026-08-19T02:19:28.099Z]  src/routes    |     100 |       75 |     100 |     100 |                   
+[2026-08-19T02:19:28.099Z]   health.js    |     100 |       50 |     100 |     100 | 25-26             
+[2026-08-19T02:19:28.099Z]   tasks.js     |     100 |     87.5 |     100 |     100 | 22                
+[2026-08-19T02:19:28.099Z]  src/services  |     100 |      100 |     100 |     100 |                   
+[2026-08-19T02:19:28.099Z]   taskStore.js |     100 |      100 |     100 |     100 |                   
+[2026-08-19T02:19:28.099Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-19T02:19:28.100Z] 
+[2026-08-19T02:19:28.100Z] Test Suites: 3 passed, 3 total
+[2026-08-19T02:19:28.100Z] Tests:       23 passed, 23 total
+[2026-08-19T02:19:28.100Z] Snapshots:   0 total
+[2026-08-19T02:19:28.100Z] Time:        0.327 s
+[2026-08-19T02:19:28.100Z] Ran all test suites.
+Post stage
+[Pipeline] archiveArtifacts
+[2026-08-19T02:19:28.434Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Construir imagen Docker)
+[Pipeline] echo
+[2026-08-19T02:19:28.708Z] === STAGE 4: Construyendo la imagen Docker ===
+[Pipeline] sh
+[2026-08-19T02:19:28.995Z] + echo '[simulado] docker build -t docker.io/dsiriarte/devops-task-api:2-demo .'
+[2026-08-19T02:19:28.996Z] [simulado] docker build -t docker.io/dsiriarte/devops-task-api:2-demo .
+[2026-08-19T02:19:28.996Z] + echo 'Dockerfile que se construiria:'
+[2026-08-19T02:19:28.996Z] Dockerfile que se construiria:
+[2026-08-19T02:19:28.996Z] + head -20 Dockerfile
+[2026-08-19T02:19:28.996Z] # ---------------------------------------------------------------------------
+[2026-08-19T02:19:28.996Z] # Build multietapa: la primera etapa instala dependencias y ejecuta pruebas,
+[2026-08-19T02:19:28.996Z] # la segunda produce una imagen final minima solo con lo necesario para correr.
+[2026-08-19T02:19:28.996Z] # ---------------------------------------------------------------------------
+[2026-08-19T02:19:28.996Z] FROM node:22-alpine AS build
+[2026-08-19T02:19:28.996Z] 
+[2026-08-19T02:19:28.996Z] WORKDIR /app
+[2026-08-19T02:19:28.996Z] 
+[2026-08-19T02:19:28.996Z] # Se copian primero los manifiestos para aprovechar la cache de capas de Docker:
+[2026-08-19T02:19:28.996Z] # si package*.json no cambia, npm ci no se vuelve a ejecutar.
+[2026-08-19T02:19:28.997Z] COPY package*.json ./
+[2026-08-19T02:19:28.997Z] RUN npm ci
+[2026-08-19T02:19:28.997Z] 
+[2026-08-19T02:19:28.997Z] COPY . .
+[2026-08-19T02:19:28.997Z] RUN npm run lint && npm test
+[2026-08-19T02:19:28.997Z] 
+[2026-08-19T02:19:28.997Z] # ---------------------------------------------------------------------------
+[2026-08-19T02:19:28.997Z] FROM node:22-alpine AS runtime
+[2026-08-19T02:19:28.997Z] 
+[2026-08-19T02:19:28.997Z] ENV NODE_ENV=production
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Escaneo de seguridad (Trivy))
+[Pipeline] echo
+[2026-08-19T02:19:29.142Z] === STAGE 5: Escaneo de vulnerabilidades de la imagen ===
+[Pipeline] sh
+[2026-08-19T02:19:29.429Z] + echo '[simulado] trivy image --severity HIGH,CRITICAL docker.io/dsiriarte/devops-task-api:2-demo'
+[2026-08-19T02:19:29.429Z] [simulado] trivy image --severity HIGH,CRITICAL docker.io/dsiriarte/devops-task-api:2-demo
+[2026-08-19T02:19:29.429Z] + echo 'Auditoria real de dependencias del proyecto:'
+[2026-08-19T02:19:29.429Z] Auditoria real de dependencias del proyecto:
+[2026-08-19T02:19:29.429Z] + npm audit --audit-level=high
+[2026-08-19T02:19:29.986Z] found 0 vulnerabilities
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publicar en el registro)
+[Pipeline] echo
+[2026-08-19T02:19:30.149Z] === STAGE 6: Publicando la imagen en el registro ===
+[Pipeline] sh
+[2026-08-19T02:19:30.435Z] + echo '[simulado] docker login docker.io (credencial: dockerhub-credentials)'
+[2026-08-19T02:19:30.435Z] [simulado] docker login docker.io (credencial: dockerhub-credentials)
+[2026-08-19T02:19:30.435Z] + echo '[simulado] docker push docker.io/dsiriarte/devops-task-api:2-demo'
+[2026-08-19T02:19:30.435Z] [simulado] docker push docker.io/dsiriarte/devops-task-api:2-demo
+[2026-08-19T02:19:30.435Z] + echo '[simulado] docker push docker.io/dsiriarte/devops-task-api:latest'
+[2026-08-19T02:19:30.435Z] [simulado] docker push docker.io/dsiriarte/devops-task-api:latest
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Actualizar manifiestos (GitOps))
+[Pipeline] echo
+[2026-08-19T02:19:30.593Z] === STAGE 7: Actualizando los manifiestos de Kubernetes ===
+[Pipeline] sh
+[2026-08-19T02:19:30.879Z] + sed -i.bak 's|image: .*devops-task-api:.*|image: docker.io/dsiriarte/devops-task-api:2-demo|' k8s/deployment.yaml
+[2026-08-19T02:19:30.879Z] + rm -f k8s/deployment.yaml.bak
+[2026-08-19T02:19:30.879Z] + echo 'Etiqueta de imagen resultante en el manifiesto:'
+[2026-08-19T02:19:30.879Z] Etiqueta de imagen resultante en el manifiesto:
+[2026-08-19T02:19:30.880Z] + grep image: k8s/deployment.yaml
+[2026-08-19T02:19:30.880Z]           image: docker.io/dsiriarte/devops-task-api:2-demo
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Desplegar en Kubernetes)
+[Pipeline] echo
+[2026-08-19T02:19:31.044Z] === STAGE 8: Desplegando en el entorno dev ===
+[Pipeline] sh
+[2026-08-19T02:19:31.331Z] + echo '[simulado] kubectl --namespace=dev apply -f k8s/'
+[2026-08-19T02:19:31.331Z] [simulado] kubectl --namespace=dev apply -f k8s/
+[2026-08-19T02:19:31.331Z] + echo '[simulado] kubectl --namespace=dev rollout status deployment/devops-task-api'
+[2026-08-19T02:19:31.331Z] [simulado] kubectl --namespace=dev rollout status deployment/devops-task-api
+[2026-08-19T02:19:31.331Z] + echo 'Manifiestos que se aplicarian:'
+[2026-08-19T02:19:31.331Z] Manifiestos que se aplicarian:
+[2026-08-19T02:19:31.331Z] + ls -1 k8s/
+[2026-08-19T02:19:31.331Z] deployment.yaml
+[2026-08-19T02:19:31.331Z] hpa.yaml
+[2026-08-19T02:19:31.331Z] service.yaml
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verificacion post-despliegue)
+[Pipeline] echo
+[2026-08-19T02:19:31.500Z] === STAGE 9: Prueba de humo contra el servicio desplegado ===
+[Pipeline] sh
+[2026-08-19T02:19:31.787Z] + echo '[simulado] kubectl run smoke-test --image=curlimages/curl -- curl -sf http://devops-task-api/healthz'
+[2026-08-19T02:19:31.787Z] [simulado] kubectl run smoke-test --image=curlimages/curl -- curl -sf http://devops-task-api/healthz
+[2026-08-19T02:19:31.787Z] + echo 'Prueba de humo real ejecutada contra la aplicacion:'
+[2026-08-19T02:19:31.787Z] Prueba de humo real ejecutada contra la aplicacion:
+[2026-08-19T02:19:31.787Z] + npm run smoke
+[2026-08-19T02:19:31.787Z] 
+[2026-08-19T02:19:31.787Z] > devops-task-api@1.0.0 smoke
+[2026-08-19T02:19:31.787Z] > node scripts/smoke-test.js
+[2026-08-19T02:19:31.787Z] 
+[2026-08-19T02:19:31.787Z] OK    /healthz  ->  {"status":"ok","uptimeSeconds":0}
+[2026-08-19T02:19:31.787Z] OK    /readyz  ->  {"status":"ready"}
+[2026-08-19T02:19:31.787Z] OK    /version  ->  {"version":"1.0.0","commit":"de6ebd32a2dd2b74ab1dd25f29ae2e5abfbf7ed8","environment":"development"}
+[2026-08-19T02:19:31.787Z] OK    /api/stats  ->  {"data":{"total":0,"done":0,"pending":0,"completionRate":0}}
+[2026-08-19T02:19:31.787Z] 
+[2026-08-19T02:19:31.787Z] Prueba de humo superada: la aplicacion responde correctamente.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobacion para produccion)
+Stage "Aprobacion para produccion" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-08-19T02:19:32.096Z] Limpieza finalizada.
+[Pipeline] echo
+[2026-08-19T02:19:32.130Z] Pipeline completado: docker.io/dsiriarte/devops-task-api:2-demo desplegado en dev
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
