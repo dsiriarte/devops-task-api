@@ -4,6 +4,7 @@
 **Versión analizada:** 1.1.1
 **Fecha:** 30 de agosto de 2026
 **Herramientas:** SonarQube Community 26.8, Trivy 0.74, npm audit
+**Repositorio:** https://github.com/dsiriarte/devops-task-api
 
 ---
 
