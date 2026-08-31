@@ -19,20 +19,20 @@
 Implementar un pipeline CI/CD completo que integre prácticas de seguridad y
 monitoreo sobre una aplicación web desplegada en Kubernetes.
 
-Esta fase parte de la anterior, donde los pipelines quedaron **definidos** pero el
+Esta fase parte de la anterior, donde los pipelines quedaron definidos pero el
 despliegue era simulado por no disponer de un entorno de contenedores. El salto
-de esta etapa es que **todo se ejecuta de verdad**: la aplicación corre en un
+de esta etapa es que todo se ejecuta de verdad: la aplicación corre en un
 clúster real, Prometheus recolecta sus métricas, Grafana las presenta, SonarQube
 analiza el código y Trivy la imagen. No queda ningún paso simulado.
 
 | Componente | Estado en la unidad 2 | Estado en esta unidad |
 |---|---|---|
 | Pipeline CI | Ejecutándose en GitHub Actions | Ampliado con escaneo de seguridad |
-| Pipeline CD | Definido, con pasos simulados | **Ejecutado contra un clúster real** |
-| Despliegue en Kubernetes | Manifiestos escritos | **3 pods corriendo y observados** |
-| Análisis estático | ESLint | **SonarQube con puerta de calidad** |
-| Análisis de dependencias | npm audit | **npm audit + Trivy** |
-| Monitoreo | Inexistente | **Prometheus, Grafana y 6 alertas** |
+| Pipeline CD | Definido, con pasos simulados | Ejecutado contra un clúster real |
+| Despliegue en Kubernetes | Manifiestos escritos | 3 pods corriendo y observados |
+| Análisis estático | ESLint | SonarQube con puerta de calidad |
+| Análisis de dependencias | npm audit | npm audit + Trivy |
+| Monitoreo | Inexistente | Prometheus, Grafana y 6 alertas |
 
 ## 2. Infraestructura del laboratorio
 
@@ -91,7 +91,7 @@ observabilidad a mano.
 ### 3.1 Por qué SonarQube vive en Jenkins y no en GitHub Actions
 
 Es una decisión de arquitectura, no de comodidad. La instancia de SonarQube está
-**autoalojada** y solo es accesible desde la red local; los *runners* de GitHub
+autoalojada y solo es accesible desde la red local; los *runners* de GitHub
 Actions se ejecutan en la nube y no pueden alcanzarla. Jenkins, en cambio, corre
 junto al clúster y junto a SonarQube.
 
@@ -130,11 +130,11 @@ dependencias entre ellos.
 | 1 | Checkout | Clona el repositorio y registra el commit exacto |
 | 2 | Instalar dependencias | `npm ci` para una instalación determinista |
 | 3 | Calidad y pruebas | ESLint y Jest en paralelo; archiva la cobertura |
-| 4 | **Análisis SonarQube** | Escáner en contenedor, con el informe LCOV de cobertura |
-| 5 | **Puerta de calidad** | Consulta el resultado y **detiene la entrega** si no se supera |
+| 4 | Análisis SonarQube | Escáner en contenedor, con el informe LCOV de cobertura |
+| 5 | Puerta de calidad | Consulta el resultado y **detiene la entrega** si no se supera |
 | 6 | Construir imagen Docker | Artefacto inmutable etiquetado por versión |
-| 7 | **Escaneo Trivy** | Vulnerabilidades del sistema base y dependencias transitivas |
-| 8 | **Desplegar en Kubernetes** | `kubectl apply` + `rollout status` |
+| 7 | Escaneo Trivy | Vulnerabilidades del sistema base y dependencias transitivas |
+| 8 | Desplegar en Kubernetes | `kubectl apply` + `rollout status` |
 | 9 | Verificación post-despliegue | Prueba de humo desde un pod efímero |
 | 10 | Aprobación para producción | Puerta manual, solo si `DEPLOY_ENV == prod` |
 
@@ -155,9 +155,9 @@ Resumen de resultados:
 
 | Herramienta | Superficie analizada | Resultado |
 |---|---|---|
-| SonarQube | Código propio | 0 bugs, 0 vulnerabilidades, 0 code smells, puerta **Passed** |
+| SonarQube | Código propio | 0 bugs, 0 vulnerabilidades, 0 code smells, puerta Passed |
 | npm audit | Dependencias declaradas | 0 vulnerabilidades |
-| Trivy | Imagen del contenedor | De 6 vulnerabilidades altas a **0** |
+| Trivy | Imagen del contenedor | De 6 vulnerabilidades altas a 0 |
 
 ![](img/06-sonarqube-dashboard.png)
 
@@ -168,11 +168,11 @@ sin incidencias nuevas y 100 % de cobertura sobre el código nuevo.
 
 Trivy encontró seis vulnerabilidades altas en la imagen 1.1.0. Ninguna provenía
 del código escrito ni de las dependencias elegidas: dos venían de OpenSSL en la
-imagen base de Alpine y **cuatro de las dependencias internas del propio `npm`**,
+imagen base de Alpine y cuatro de las dependencias internas del propio `npm`,
 que viaja dentro de la imagen oficial de Node.
 
 La corrección fue doble: aplicar los parches del sistema operativo con
-`apk upgrade`, y **eliminar npm del contenedor de ejecución**. La aplicación se
+`apk upgrade`, y eliminar npm del contenedor de ejecución. La aplicación se
 ejecuta con `node`, nunca con `npm`; mantener el gestor de paquetes solo aportaba
 superficie de ataque. Las seis vulnerabilidades pasaron a cero.
 
@@ -216,8 +216,9 @@ Prometheus. Hay una prueba automatizada que verifica precisamente esto.
 ### 7.2 Descubrimiento declarativo
 
 Un `ServiceMonitor` declara qué servicios raspar y con qué frecuencia; el
-Prometheus Operator lo traduce a configuración real. La alternativa —editar la
-configuración de Prometheus a mano— dejaría el monitoreo fuera del control de
+Prometheus Operator lo traduce a configuración real. La alternativa, que sería
+editar la configuración de Prometheus a mano, dejaría el monitoreo fuera del
+control de
 versiones, que es exactamente el problema que Kubernetes resuelve para todo lo
 demás.
 
@@ -242,7 +243,7 @@ Consta de trece paneles en cuatro secciones:
 **Figura 4.** Dashboard en operación normal: 3 pods disponibles, 13.3 peticiones
 por segundo, 0 % de errores y latencia p95 de 4.75 ms.
 
-Se vigila la **latencia por percentiles y no el promedio**, porque el promedio
+Se vigila la latencia por percentiles y no el promedio, porque el promedio
 esconde justamente los casos que el usuario sufre: con 95 peticiones de 5 ms y 5
 de 2 segundos, el promedio parece aceptable mientras uno de cada veinte usuarios
 espera dos segundos.
@@ -260,8 +261,8 @@ Seis reglas agrupadas por naturaleza del síntoma:
 | `LatenciaAlta` | p95 por encima de 500 ms | warning | 3 min |
 | `MemoriaCercaDelLimite` | Consumo sobre el 85 % del límite | warning | 5 min |
 
-Todas alertan sobre **síntomas que el usuario percibe** —errores, lentitud,
-caída— y no sobre causas internas. Una alerta que nadie puede accionar solo
+Todas alertan sobre síntomas que el usuario percibe (errores, lentitud, caída)
+y no sobre causas internas. Una alerta que nadie puede accionar solo
 genera ruido, y un sistema de alertas ruidoso termina ignorado, que es la forma
 más común en que muere la monitorización.
 
@@ -276,7 +277,7 @@ está en el informe postmortem; aquí se resumen los resultados medidos:
 
 | Momento | Hora (UTC) | Evento |
 |---|---|---|
-| T1 | 03:21:05 | Imagen defectuosa construida: ESLint y las 30 pruebas **pasan** |
+| T1 | 03:21:05 | Imagen defectuosa construida: ESLint y las 30 pruebas pasan |
 | T3 | 03:21:50 | Desplegada. Los 3 pods superan las sondas de vida y disponibilidad |
 | T5 | 03:25:45 | Comienza el tráfico de usuarios |
 | T6 | 03:27:58 | La alerta `TasaDeErroresElevada` pasa a *firing* (23.4 % de errores) |
@@ -318,63 +319,63 @@ datos propio.
 
 ## 10. Reflexión sobre eficiencia operativa
 
-**Lo que la automatización eliminó.** El despliegue dejó de ser un procedimiento y
-pasó a ser una consecuencia: un `git push` desencadena validación, análisis,
-construcción, escaneo, despliegue y verificación sin intervención humana. El
-tiempo del pipeline completo de CD es de **1 min 41 s**, del cual el análisis de
-SonarQube consume un minuto. Antes de la automatización, ese mismo trabajo
-—ejecutar pruebas, revisar calidad, construir, escanear, desplegar, verificar—
-ocuparía a una persona durante buena parte de una tarde, y lo haría de forma
-distinta cada vez.
+Con la automatización montada, el despliegue dejó de ser un procedimiento que
+alguien ejecuta y pasó a ser una consecuencia de hacer `git push`. A partir de ahí
+se encadenan validación, análisis, construcción, escaneo, despliegue y
+verificación sin que nadie intervenga. El pipeline de entrega completo tarda 1 min
+41 s, y de ese tiempo el análisis de SonarQube consume prácticamente un minuto.
+Ese mismo trabajo hecho a mano me habría ocupado buena parte de una tarde, y lo
+habría hecho de forma algo distinta cada vez.
 
-**Dónde está el valor real.** No en la velocidad, sino en la **reducción de la
-varianza**. Un proceso automatizado ejecuta los mismos pasos en el mismo orden
-siempre; un proceso manual varía con la prisa, el cansancio y la persona. El
-incidente simulado lo ilustra: la recuperación tomó 37 segundos porque revertir
-era un comando conocido y ensayado, no una decisión improvisada bajo presión.
+Con la práctica terminada creo que el beneficio principal no está en la velocidad
+sino en la reducción de la varianza. Un proceso automatizado ejecuta los mismos
+pasos en el mismo orden siempre, mientras que uno manual varía según la prisa que
+haya, el cansancio o quién lo ejecute. El incidente simulado lo dejó claro: la
+recuperación tomó 37 segundos porque revertir era un comando conocido y no una
+decisión improvisada bajo presión.
 
-**Sobre las métricas DORA.** El laboratorio incide en las cuatro:
+En términos de las métricas DORA, el laboratorio incide en las cuatro. La
+frecuencia de despliegue aumenta porque desplegar deja de ser un evento. El *lead
+time* queda en 1 min 41 s desde el commit hasta producción verificada. La tasa de
+fallos se reduce por las cinco puertas de calidad que se atraviesan antes de que
+la imagen llegue a existir. Y el tiempo de recuperación quedó medido en 37
+segundos, con reversión automática configurada ante un fallo del pipeline.
 
-- *Frecuencia de despliegue*: desplegar dejó de ser un evento.
-- *Lead time*: 1 min 41 s desde el commit hasta producción verificada.
-- *Tasa de fallos*: cinco puertas de calidad antes de que la imagen exista.
-- *Tiempo de recuperación*: 37 s medidos, con reversión automática ante fallo.
+También quedó visible un límite. La automatización desplaza el problema pero no lo
+elimina, porque cada puerta detecta únicamente lo que sabe buscar. El defecto que
+inyecté atravesó todas ellas porque vivía en una condición que ninguna prueba
+ejercitaba. De ahí saco que el monitoreo en producción no es una red de seguridad
+adicional sino el único control que observa el sistema tal como funciona, y que
+conviene invertir en observabilidad tanto como en pruebas.
 
-**El límite que el laboratorio hizo visible.** La automatización desplaza el
-problema, no lo elimina. Las puertas de calidad detectan lo que saben buscar; el
-defecto inyectado atravesó todas ellas porque vivía en una condición que ninguna
-prueba ejercía. La conclusión operativa es que **el monitoreo en producción no es
-la última red de seguridad sino la única que observa el sistema real**, y que
-invertir en observabilidad rinde tanto como invertir en pruebas.
-
-Hay además un hallazgo incómodo que conviene registrar: durante casi cuatro
-minutos la versión defectuosa estuvo desplegada sin que ninguna alerta se
-disparara, simplemente porque no había tráfico que ejercitara la ruta rota. La
-ausencia de alertas no es evidencia de salud. Un *probe* sintético que ejercite
-periódicamente las rutas críticas habría detectado el fallo sin esperar a que lo
-sufriera un usuario.
+Hay un último hallazgo que prefiero dejar registrado porque me resultó incómodo.
+Durante casi cuatro minutos la versión defectuosa estuvo desplegada sin que se
+disparara ninguna alerta, simplemente porque no había tráfico que ejercitara la
+ruta rota. La ausencia de alertas no significa que el sistema esté sano. Una sonda
+sintética que ejercitara periódicamente las rutas críticas habría detectado el
+fallo sin necesidad de que lo sufriera antes un usuario.
 
 ## 11. Conclusiones
 
-El laboratorio integró en un solo flujo las tres dimensiones que la unidad
-plantea —automatización, seguridad y monitoreo— y las validó ejecutándolas contra
-infraestructura real en lugar de describirlas.
+El laboratorio integró en un mismo flujo la automatización, la seguridad y el
+monitoreo, y los validó ejecutándolos contra infraestructura real en lugar de
+limitarse a describirlos.
 
-Tres resultados concretos:
+De los resultados obtenidos destaco tres. El primero es que la seguridad de un
+contenedor se decide también en el momento de empaquetarlo: ninguna de las seis
+vulnerabilidades encontradas estaba en el código que escribí, todas llegaron con
+la imagen base y con herramientas que la aplicación ni siquiera utiliza en
+ejecución. El segundo es que un análisis cuyo resultado no bloquea nada no llega a
+ser un control; la puerta de calidad del stage 5 es lo que convierte a SonarQube
+en algo más que un informe. El tercero es que la observabilidad acaba funcionando
+como la última puerta del pipeline, porque el defecto inyectado superó el análisis
+de estilo, las 30 pruebas y el análisis estático, y solo lo detectó la alerta de
+tasa de errores, dos minutos y trece segundos después de empezar a afectar a los
+usuarios.
 
-1. **La seguridad de un contenedor se decide también al empaquetarlo.** Ninguna
-   de las seis vulnerabilidades encontradas estaba en el código escrito; todas
-   llegaron con la imagen base y con herramientas que la aplicación no usa.
-2. **Un análisis que no bloquea no es un control.** La puerta de calidad del
-   stage 5 es lo que convierte a SonarQube en algo más que un informe.
-3. **La observabilidad es la última puerta del pipeline.** El defecto inyectado
-   superó lint, 30 pruebas y análisis estático; solo la alerta de tasa de errores
-   lo detectó, 2 min 13 s después de que empezara a afectar a usuarios.
-
-El valor de la arquitectura no está en las herramientas por separado, sino en que
-cada una cubre el punto ciego de la anterior: ESLint no ve lo que ven las
-pruebas, las pruebas no ven lo que ve SonarQube, SonarQube no ve lo que ve Trivy,
-y ninguna de ellas ve lo que ve Prometheus cuando el sistema está vivo.
+El valor de esta arquitectura no está tanto en cada herramienta por separado como
+en que cada una cubre el punto ciego de la anterior, y ninguna de ellas observa lo
+que observa Prometheus cuando el sistema ya está en funcionamiento.
 
 ## Referencias
 

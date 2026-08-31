@@ -10,7 +10,7 @@ request*, y uno de **entrega continua** con Jenkins, que analiza el código con
 SonarQube, escanea la imagen con Trivy y despliega la aplicación en un clúster de
 Kubernetes, donde Prometheus y Grafana la observan.
 
-La aplicación **está desplegada y monitoreada de verdad**: tres réplicas
+La aplicación está desplegada y monitoreada de verdad: tres réplicas
 corriendo, métricas recolectadas cada 15 segundos, un tablero con trece paneles y
 seis reglas de alerta.
 
@@ -147,7 +147,7 @@ on:
   workflow_dispatch:
 ```
 
-Se ejecuta **automáticamente** ante cada `push` a `main` o `develop` y ante cada
+Se ejecuta automáticamente ante cada `push` a `main` o `develop` y ante cada
 *pull request* dirigido a `main`; `workflow_dispatch` permite además lanzarlo a
 mano. El bloque `concurrency` cancela ejecuciones anteriores de la misma rama para
 no consumir minutos de *runner* en *commits* ya superados.
@@ -162,7 +162,7 @@ no consumir minutos de *runner* en *commits* ya superados.
 | **`build`** | Construye la imagen Docker y le hace *smoke test* | Garantiza que el artefacto que consumirá el CD es construible y arranca |
 | **`summary`** | Publica una tabla de resultados | Retroalimentación legible en la propia interfaz de Actions |
 
-`lint`, `test` y `security` corren **en paralelo**; `build` declara
+`lint`, `test` y `security` corren en paralelo; `build` declara
 `needs: [lint, test, security]` y solo se ejecuta si los tres pasan. El resultado
 es un pipeline que falla en el primer minuto cuando algo está mal, en lugar de
 gastar tiempo construyendo una imagen que se va a descartar.
@@ -194,7 +194,7 @@ la aplicación y queda auditado en el historial de Git.
 |---|---|---|
 | 1 | **Checkout** | Clona el repositorio y registra *commit* y rama exactos: trazabilidad del artefacto |
 | 2 | **Instalar dependencias** | `npm ci` para una construcción reproducible |
-| 3 | **Calidad y pruebas** | ESLint y Jest **en paralelo**; archiva el reporte de cobertura |
+| 3 | **Calidad y pruebas** | ESLint y Jest en paralelo; archiva el reporte de cobertura |
 | 4 | **Construir imagen Docker** | Empaqueta la app en un artefacto inmutable etiquetado `build-commit` |
 | 5 | **Escaneo de seguridad (Trivy)** | Detecta CVEs en la imagen antes de publicarla (*shift-left security*) |
 | 6 | **Publicar en el registro** | `docker push` a DockerHub; la etiqueta `latest` solo se mueve desde `main` |
@@ -207,7 +207,7 @@ la aplicación y queda auditado en el historial de Git.
 
 El parámetro `DEPLOY_ENV` (`dev` / `staging` / `prod`) determina el *namespace*
 de destino, y el mismo pipeline sirve para los tres entornos sin duplicar
-definiciones. **El artefacto se construye una sola vez y se promueve**: lo que se
+definiciones. El artefacto se construye una sola vez y se promueve: lo que se
 prueba en `dev` es exactamente el mismo binario que llega a producción, lo que
 elimina la clase entera de fallos "funcionaba en staging".
 
@@ -329,7 +329,7 @@ en Kubernetes.
 
 | Herramienta | Superficie | Dónde se ejecuta | Resultado |
 |---|---|---|---|
-| SonarQube | Código propio | Jenkins, stages 4 y 5 | 0 bugs · 0 vulnerabilidades · puerta **Passed** |
+| SonarQube | Código propio | Jenkins, stages 4 y 5 | 0 bugs · 0 vulnerabilidades · puerta Passed |
 | npm audit | Dependencias declaradas | GitHub Actions | 0 vulnerabilidades |
 | Trivy | Imagen del contenedor | GitHub Actions y Jenkins | De 6 vulnerabilidades altas a **0** |
 
