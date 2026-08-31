@@ -4,3 +4,6 @@ coverage/
 .DS_Store
 *.log
 jenkins_home/
+
+# Informes de escaneo en formato JSON: voluminosos y regenerables por el pipeline
+docs/seguridad/*.json

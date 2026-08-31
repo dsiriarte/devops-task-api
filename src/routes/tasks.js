@@ -2,6 +2,7 @@
 
 const express = require('express');
 const { store, ValidationError } = require('../services/taskStore');
+const { tasksCreatedTotal, tasksCompletedTotal, tasksPending } = require('../metrics');
 
 const router = express.Router();
 
@@ -20,6 +21,8 @@ router.get('/tasks/:id', (req, res) => {
 router.post('/tasks', (req, res, next) => {
   try {
     const task = store.create(req.body || {});
+    tasksCreatedTotal.inc();
+    tasksPending.set(store.stats().pending);
     res.status(201).json({ data: task });
   } catch (err) {
     next(err);
@@ -31,6 +34,8 @@ router.patch('/tasks/:id/complete', (req, res) => {
   if (!task) {
     return res.status(404).json({ error: 'Tarea no encontrada' });
   }
+  tasksCompletedTotal.inc();
+  tasksPending.set(store.stats().pending);
   return res.json({ data: task });
 });
 
@@ -39,6 +44,7 @@ router.delete('/tasks/:id', (req, res) => {
   if (!removed) {
     return res.status(404).json({ error: 'Tarea no encontrada' });
   }
+  tasksPending.set(store.stats().pending);
   return res.status(204).send();
 });
 

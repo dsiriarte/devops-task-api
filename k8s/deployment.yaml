@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-task-api
+  namespace: devops-lab
   labels:
     app: devops-task-api
 spec:
@@ -29,10 +30,14 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: devops-task-api
           # El pipeline de CD reemplaza esta etiqueta por la version publicada.
-          image: docker.io/dsiriarte/devops-task-api:latest
+          image: devops-task-api:1.1.1
+          # La imagen se construye en el demonio local del cluster, por lo que
+          # no debe intentar descargarse de un registro remoto.
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

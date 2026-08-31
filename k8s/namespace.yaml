@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops-lab
+  labels:
+    name: devops-lab
+    # Aplica los estandares de seguridad de pods en modo restringido: el
+    # namespace rechaza cargas que pidan privilegios innecesarios.
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted

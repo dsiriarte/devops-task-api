@@ -1,9 +1,10 @@
 'use strict';
 
-const path = require('path');
+const path = require('node:path');
 const express = require('express');
 const healthRouter = require('./routes/health');
 const { router: tasksRouter } = require('./routes/tasks');
+const { registry, metricsMiddleware } = require('./metrics');
 
 /**
  * Construye la aplicacion Express.
@@ -16,6 +17,15 @@ function createApp() {
 
   app.use(express.json());
   app.use(express.static(path.join(__dirname, '..', 'public')));
+
+  // La medicion se registra antes que las rutas para que abarque todas ellas.
+  app.use(metricsMiddleware);
+
+  // Endpoint que Prometheus consulta periodicamente para recolectar metricas.
+  app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', registry.contentType);
+    res.end(await registry.metrics());
+  });
 
   app.use('/', healthRouter);
   app.use('/api', tasksRouter);

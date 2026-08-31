@@ -1,0 +1,27 @@
+# El ServiceMonitor es el recurso con el que el Prometheus Operator descubre
+# objetivos de recoleccion. En lugar de editar la configuracion de Prometheus a
+# mano, se declara aqui que servicios raspar y con que frecuencia; el operador
+# traduce esto a la configuracion real. Es el enfoque declarativo equivalente al
+# resto de manifiestos de Kubernetes.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: devops-task-api
+  namespace: devops-lab
+  labels:
+    app: devops-task-api
+    # kube-prometheus-stack solo adopta los ServiceMonitor que llevan la
+    # etiqueta de su release de Helm.
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: devops-task-api
+  namespaceSelector:
+    matchNames:
+      - devops-lab
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s

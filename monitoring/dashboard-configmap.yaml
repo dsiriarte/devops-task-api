@@ -1,0 +1,335 @@
+# Dashboard de Grafana declarado como codigo.
+#
+# El sidecar de Grafana vigila los ConfigMap con la etiqueta
+# grafana_dashboard y los carga automaticamente. Asi el tablero vive
+# versionado en el repositorio en lugar de existir solo dentro de la
+# base de datos de Grafana, donde no se revisa ni se puede reproducir.
+apiVersion: v1
+data:
+  devops-task-api.json: "{\n  \"uid\": \"devops-task-api\",\n  \"title\": \"DevOps\
+    \ Task API — Observabilidad\",\n  \"description\": \"Estado, recursos, rendimiento\
+    \ y metricas de negocio de la aplicacion desplegada en Kubernetes.\",\n  \"tags\"\
+    : [\n    \"devops\",\n    \"kubernetes\",\n    \"laboratorio\"\n  ],\n  \"timezone\"\
+    : \"browser\",\n  \"editable\": true,\n  \"schemaVersion\": 39,\n  \"version\"\
+    : 1,\n  \"refresh\": \"10s\",\n  \"time\": {\n    \"from\": \"now-30m\",\n   \
+    \ \"to\": \"now\"\n  },\n  \"templating\": {\n    \"list\": []\n  },\n  \"annotations\"\
+    : {\n    \"list\": []\n  },\n  \"panels\": [\n    {\n      \"type\": \"row\",\n\
+    \      \"title\": \"Estado del servicio\",\n      \"collapsed\": false,\n    \
+    \  \"gridPos\": {\n        \"h\": 1,\n        \"w\": 24,\n        \"x\": 0,\n\
+    \        \"y\": 0\n      },\n      \"panels\": []\n    },\n    {\n      \"type\"\
+    : \"stat\",\n      \"title\": \"Pods disponibles\",\n      \"datasource\": {\n\
+    \        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n\
+    \      \"description\": \"Replicas del deployment que estan listas para recibir\
+    \ trafico. Por debajo de 2 se pierde la redundancia.\",\n      \"gridPos\": {\n\
+    \        \"h\": 4,\n        \"w\": 4,\n        \"x\": 0,\n        \"y\": 1\n \
+    \     },\n      \"targets\": [\n        {\n          \"datasource\": {\n     \
+    \       \"type\": \"prometheus\",\n            \"uid\": \"prometheus\"\n     \
+    \     },\n          \"expr\": \"kube_deployment_status_replicas_available{namespace=\\\
+    \"devops-lab\\\", deployment=\\\"devops-task-api\\\"}\",\n          \"legendFormat\"\
+    : \"disponibles\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"\
+    fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\",\n   \
+    \       \"color\": {\n            \"mode\": \"thresholds\"\n          },\n   \
+    \       \"thresholds\": {\n            \"mode\": \"absolute\",\n            \"\
+    steps\": [\n              {\n                \"color\": \"red\",\n           \
+    \     \"value\": null\n              },\n              {\n                \"color\"\
+    : \"orange\",\n                \"value\": 2\n              },\n              {\n\
+    \                \"color\": \"green\",\n                \"value\": 3\n       \
+    \       }\n            ]\n          }\n        },\n        \"overrides\": []\n\
+    \      },\n      \"options\": {\n        \"reduceOptions\": {\n          \"calcs\"\
+    : [\n            \"lastNotNull\"\n          ],\n          \"fields\": \"\",\n\
+    \          \"values\": false\n        },\n        \"textMode\": \"auto\",\n  \
+    \      \"colorMode\": \"value\",\n        \"graphMode\": \"area\",\n        \"\
+    justifyMode\": \"auto\",\n        \"orientation\": \"auto\"\n      }\n    },\n\
+    \    {\n      \"type\": \"stat\",\n      \"title\": \"Instancias reportando metricas\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"prometheus\"\n      },\n      \"description\": \"Numero de pods que responden\
+    \ a la recoleccion de Prometheus.\",\n      \"gridPos\": {\n        \"h\": 4,\n\
+    \        \"w\": 4,\n        \"x\": 4,\n        \"y\": 1\n      },\n      \"targets\"\
+    : [\n        {\n          \"datasource\": {\n            \"type\": \"prometheus\"\
+    ,\n            \"uid\": \"prometheus\"\n          },\n          \"expr\": \"count(up{job=\\\
+    \"devops-task-api\\\"} == 1)\",\n          \"legendFormat\": \"activas\",\n  \
+    \        \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n   \
+    \     \"defaults\": {\n          \"unit\": \"none\",\n          \"color\": {\n\
+    \            \"mode\": \"thresholds\"\n          },\n          \"thresholds\"\
+    : {\n            \"mode\": \"absolute\",\n            \"steps\": [\n         \
+    \     {\n                \"color\": \"red\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"orange\",\n \
+    \               \"value\": 2\n              },\n              {\n            \
+    \    \"color\": \"green\",\n                \"value\": 3\n              }\n  \
+    \          ]\n          }\n        },\n        \"overrides\": []\n      },\n \
+    \     \"options\": {\n        \"reduceOptions\": {\n          \"calcs\": [\n \
+    \           \"lastNotNull\"\n          ],\n          \"fields\": \"\",\n     \
+    \     \"values\": false\n        },\n        \"textMode\": \"auto\",\n       \
+    \ \"colorMode\": \"value\",\n        \"graphMode\": \"area\",\n        \"justifyMode\"\
+    : \"auto\",\n        \"orientation\": \"auto\"\n      }\n    },\n    {\n     \
+    \ \"type\": \"stat\",\n      \"title\": \"Peticiones por segundo\",\n      \"\
+    datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\
+    \n      },\n      \"description\": \"Trafico agregado que atiende el servicio.\"\
+    ,\n      \"gridPos\": {\n        \"h\": 4,\n        \"w\": 4,\n        \"x\":\
+    \ 8,\n        \"y\": 1\n      },\n      \"targets\": [\n        {\n          \"\
+    datasource\": {\n            \"type\": \"prometheus\",\n            \"uid\": \"\
+    prometheus\"\n          },\n          \"expr\": \"sum(rate(http_requests_total[5m]))\"\
+    ,\n          \"legendFormat\": \"req/s\",\n          \"refId\": \"A\"\n      \
+    \  }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"\
+    unit\": \"reqps\",\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          },\n          \"thresholds\": {\n            \"mode\": \"absolute\"\
+    ,\n            \"steps\": [\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": null\n              }\n            ]\n         \
+    \ }\n        },\n        \"overrides\": []\n      },\n      \"options\": {\n \
+    \       \"reduceOptions\": {\n          \"calcs\": [\n            \"lastNotNull\"\
+    \n          ],\n          \"fields\": \"\",\n          \"values\": false\n   \
+    \     },\n        \"textMode\": \"auto\",\n        \"colorMode\": \"value\",\n\
+    \        \"graphMode\": \"area\",\n        \"justifyMode\": \"auto\",\n      \
+    \  \"orientation\": \"auto\"\n      }\n    },\n    {\n      \"type\": \"stat\"\
+    ,\n      \"title\": \"Tasa de errores 5xx\",\n      \"datasource\": {\n      \
+    \  \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n    \
+    \  \"description\": \"Proporcion de respuestas con error del servidor. La alerta\
+    \ critica se dispara por encima del 5%.\",\n      \"gridPos\": {\n        \"h\"\
+    : 4,\n        \"w\": 4,\n        \"x\": 12,\n        \"y\": 1\n      },\n    \
+    \  \"targets\": [\n        {\n          \"datasource\": {\n            \"type\"\
+    : \"prometheus\",\n            \"uid\": \"prometheus\"\n          },\n       \
+    \   \"expr\": \"(sum(rate(http_requests_total{status_code=~\\\"5..\\\"}[5m]))\
+    \ or vector(0)) / clamp_min(sum(rate(http_requests_total[5m])), 0.001)\",\n  \
+    \        \"legendFormat\": \"error\",\n          \"refId\": \"A\"\n        }\n\
+    \      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\"\
+    : \"percentunit\",\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          },\n          \"thresholds\": {\n            \"mode\": \"absolute\"\
+    ,\n            \"steps\": [\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": null\n              },\n              {\n      \
+    \          \"color\": \"orange\",\n                \"value\": 0.01\n         \
+    \     },\n              {\n                \"color\": \"red\",\n             \
+    \   \"value\": 0.05\n              }\n            ]\n          }\n        },\n\
+    \        \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"calcs\": [\n            \"lastNotNull\"\n          ],\n     \
+    \     \"fields\": \"\",\n          \"values\": false\n        },\n        \"textMode\"\
+    : \"auto\",\n        \"colorMode\": \"value\",\n        \"graphMode\": \"area\"\
+    ,\n        \"justifyMode\": \"auto\",\n        \"orientation\": \"auto\"\n   \
+    \   }\n    },\n    {\n      \"type\": \"stat\",\n      \"title\": \"Latencia p95\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"prometheus\"\n      },\n      \"description\": \"El 5% de peticiones mas lentas\
+    \ tarda mas que este valor. Se vigila el percentil y no el promedio porque el\
+    \ promedio esconde los casos que el usuario sufre.\",\n      \"gridPos\": {\n\
+    \        \"h\": 4,\n        \"w\": 4,\n        \"x\": 16,\n        \"y\": 1\n\
+    \      },\n      \"targets\": [\n        {\n          \"datasource\": {\n    \
+    \        \"type\": \"prometheus\",\n            \"uid\": \"prometheus\"\n    \
+    \      },\n          \"expr\": \"histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m]))\
+    \ by (le))\",\n          \"legendFormat\": \"p95\",\n          \"refId\": \"A\"\
+    \n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n   \
+    \       \"unit\": \"s\",\n          \"color\": {\n            \"mode\": \"thresholds\"\
+    \n          },\n          \"thresholds\": {\n            \"mode\": \"absolute\"\
+    ,\n            \"steps\": [\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": null\n              },\n              {\n      \
+    \          \"color\": \"orange\",\n                \"value\": 0.3\n          \
+    \    },\n              {\n                \"color\": \"red\",\n              \
+    \  \"value\": 0.5\n              }\n            ]\n          }\n        },\n \
+    \       \"overrides\": []\n      },\n      \"options\": {\n        \"reduceOptions\"\
+    : {\n          \"calcs\": [\n            \"lastNotNull\"\n          ],\n     \
+    \     \"fields\": \"\",\n          \"values\": false\n        },\n        \"textMode\"\
+    : \"auto\",\n        \"colorMode\": \"value\",\n        \"graphMode\": \"area\"\
+    ,\n        \"justifyMode\": \"auto\",\n        \"orientation\": \"auto\"\n   \
+    \   }\n    },\n    {\n      \"type\": \"stat\",\n      \"title\": \"Reinicios\
+    \ (1 h)\",\n      \"datasource\": {\n        \"type\": \"prometheus\",\n     \
+    \   \"uid\": \"prometheus\"\n      },\n      \"description\": \"Reinicios de contenedor\
+    \ en la ultima hora. Un valor sostenido indica CrashLoopBackOff.\",\n      \"\
+    gridPos\": {\n        \"h\": 4,\n        \"w\": 4,\n        \"x\": 20,\n     \
+    \   \"y\": 1\n      },\n      \"targets\": [\n        {\n          \"datasource\"\
+    : {\n            \"type\": \"prometheus\",\n            \"uid\": \"prometheus\"\
+    \n          },\n          \"expr\": \"sum(increase(kube_pod_container_status_restarts_total{namespace=\\\
+    \"devops-lab\\\"}[1h]))\",\n          \"legendFormat\": \"reinicios\",\n     \
+    \     \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n      \
+    \  \"defaults\": {\n          \"unit\": \"none\",\n          \"color\": {\n  \
+    \          \"mode\": \"thresholds\"\n          },\n          \"thresholds\": {\n\
+    \            \"mode\": \"absolute\",\n            \"steps\": [\n             \
+    \ {\n                \"color\": \"green\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"orange\",\n \
+    \               \"value\": 1\n              },\n              {\n            \
+    \    \"color\": \"red\",\n                \"value\": 3\n              }\n    \
+    \        ]\n          }\n        },\n        \"overrides\": []\n      },\n   \
+    \   \"options\": {\n        \"reduceOptions\": {\n          \"calcs\": [\n   \
+    \         \"lastNotNull\"\n          ],\n          \"fields\": \"\",\n       \
+    \   \"values\": false\n        },\n        \"textMode\": \"auto\",\n        \"\
+    colorMode\": \"value\",\n        \"graphMode\": \"area\",\n        \"justifyMode\"\
+    : \"auto\",\n        \"orientation\": \"auto\"\n      }\n    },\n    {\n     \
+    \ \"type\": \"row\",\n      \"title\": \"Consumo de recursos\",\n      \"collapsed\"\
+    : false,\n      \"gridPos\": {\n        \"h\": 1,\n        \"w\": 24,\n      \
+    \  \"x\": 0,\n        \"y\": 5\n      },\n      \"panels\": []\n    },\n    {\n\
+    \      \"type\": \"timeseries\",\n      \"title\": \"Uso de CPU por pod\",\n \
+    \     \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\": \"\
+    prometheus\"\n      },\n      \"description\": \"Consumo de CPU en nucleos. La\
+    \ linea de limite muestra el techo configurado en el deployment. La linea roja\
+    \ discontinua marca el 85% del limite por pod (0.25 nucleos / 192 MiB), umbral\
+    \ en el que se dispara la alerta.\",\n      \"gridPos\": {\n        \"h\": 8,\n\
+    \        \"w\": 12,\n        \"x\": 0,\n        \"y\": 6\n      },\n      \"targets\"\
+    : [\n        {\n          \"datasource\": {\n            \"type\": \"prometheus\"\
+    ,\n            \"uid\": \"prometheus\"\n          },\n          \"expr\": \"sum(rate(container_cpu_usage_seconds_total{namespace=\\\
+    \"devops-lab\\\", pod=~\\\"devops-task-api-.*\\\"}[5m])) by (pod)\",\n       \
+    \   \"legendFormat\": \"{{pod}}\",\n          \"refId\": \"A\"\n        }\n  \
+    \    ],\n      \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\"\
+    : \"cores\",\n          \"color\": {\n            \"mode\": \"palette-classic\"\
+    \n          },\n          \"custom\": {\n            \"drawStyle\": \"line\",\n\
+    \            \"lineWidth\": 2,\n            \"fillOpacity\": 12,\n           \
+    \ \"showPoints\": \"never\",\n            \"spanNulls\": true,\n            \"\
+    axisLabel\": \"\",\n            \"gradientMode\": \"opacity\",\n            \"\
+    thresholdsStyle\": {\n              \"mode\": \"dashed\"\n            }\n    \
+    \      },\n          \"thresholds\": {\n            \"mode\": \"absolute\",\n\
+    \            \"steps\": [\n              {\n                \"color\": \"green\"\
+    ,\n                \"value\": null\n              },\n              {\n      \
+    \          \"color\": \"red\",\n                \"value\": 0.2125\n          \
+    \    }\n            ]\n          }\n        },\n        \"overrides\": []\n  \
+    \    },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"showLegend\": true,\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n\
+    \      \"type\": \"timeseries\",\n      \"title\": \"Uso de memoria por pod\"\
+    ,\n      \"datasource\": {\n        \"type\": \"prometheus\",\n        \"uid\"\
+    : \"prometheus\"\n      },\n      \"description\": \"Memoria de trabajo por pod.\
+    \ Al alcanzar el limite Kubernetes termina el contenedor por OOMKill. La linea\
+    \ roja discontinua marca el 85% del limite por pod (0.25 nucleos / 192 MiB), umbral\
+    \ en el que se dispara la alerta.\",\n      \"gridPos\": {\n        \"h\": 8,\n\
+    \        \"w\": 12,\n        \"x\": 12,\n        \"y\": 6\n      },\n      \"\
+    targets\": [\n        {\n          \"datasource\": {\n            \"type\": \"\
+    prometheus\",\n            \"uid\": \"prometheus\"\n          },\n          \"\
+    expr\": \"sum(container_memory_working_set_bytes{namespace=\\\"devops-lab\\\"\
+    , pod=~\\\"devops-task-api-.*\\\"}) by (pod)\",\n          \"legendFormat\": \"\
+    {{pod}}\",\n          \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\"\
+    : {\n        \"defaults\": {\n          \"unit\": \"bytes\",\n          \"color\"\
+    : {\n            \"mode\": \"palette-classic\"\n          },\n          \"custom\"\
+    : {\n            \"drawStyle\": \"line\",\n            \"lineWidth\": 2,\n   \
+    \         \"fillOpacity\": 12,\n            \"showPoints\": \"never\",\n     \
+    \       \"spanNulls\": true,\n            \"axisLabel\": \"\",\n            \"\
+    gradientMode\": \"opacity\",\n            \"thresholdsStyle\": {\n           \
+    \   \"mode\": \"dashed\"\n            }\n          },\n          \"thresholds\"\
+    : {\n            \"mode\": \"absolute\",\n            \"steps\": [\n         \
+    \     {\n                \"color\": \"green\",\n                \"value\": null\n\
+    \              },\n              {\n                \"color\": \"red\",\n    \
+    \            \"value\": 171127603.2\n              }\n            ]\n        \
+    \  }\n        },\n        \"overrides\": []\n      },\n      \"options\": {\n\
+    \        \"legend\": {\n          \"displayMode\": \"list\",\n          \"placement\"\
+    : \"bottom\",\n          \"showLegend\": true,\n          \"calcs\": []\n    \
+    \    },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"\
+    sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"type\": \"row\",\n\
+    \      \"title\": \"Rendimiento de la API\",\n      \"collapsed\": false,\n  \
+    \    \"gridPos\": {\n        \"h\": 1,\n        \"w\": 24,\n        \"x\": 0,\n\
+    \        \"y\": 14\n      },\n      \"panels\": []\n    },\n    {\n      \"type\"\
+    : \"timeseries\",\n      \"title\": \"Latencia por percentiles\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n    \
+    \  },\n      \"description\": \"Distribucion de la latencia. La separacion entre\
+    \ p50 y p99 revela si el servicio degrada solo para una minoria de peticiones.\"\
+    ,\n      \"gridPos\": {\n        \"h\": 8,\n        \"w\": 12,\n        \"x\"\
+    : 0,\n        \"y\": 15\n      },\n      \"targets\": [\n        {\n         \
+    \ \"datasource\": {\n            \"type\": \"prometheus\",\n            \"uid\"\
+    : \"prometheus\"\n          },\n          \"expr\": \"histogram_quantile(0.50,\
+    \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))\",\n          \"\
+    legendFormat\": \"p50\",\n          \"refId\": \"A\"\n        },\n        {\n\
+    \          \"datasource\": {\n            \"type\": \"prometheus\",\n        \
+    \    \"uid\": \"prometheus\"\n          },\n          \"expr\": \"histogram_quantile(0.95,\
+    \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))\",\n          \"\
+    legendFormat\": \"p95\",\n          \"refId\": \"B\"\n        },\n        {\n\
+    \          \"datasource\": {\n            \"type\": \"prometheus\",\n        \
+    \    \"uid\": \"prometheus\"\n          },\n          \"expr\": \"histogram_quantile(0.99,\
+    \ sum(rate(http_request_duration_seconds_bucket[5m])) by (le))\",\n          \"\
+    legendFormat\": \"p99\",\n          \"refId\": \"C\"\n        }\n      ],\n  \
+    \    \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"s\",\n\
+    \          \"color\": {\n            \"mode\": \"palette-classic\"\n         \
+    \ },\n          \"custom\": {\n            \"drawStyle\": \"line\",\n        \
+    \    \"lineWidth\": 2,\n            \"fillOpacity\": 12,\n            \"showPoints\"\
+    : \"never\",\n            \"spanNulls\": true,\n            \"axisLabel\": \"\"\
+    ,\n            \"gradientMode\": \"opacity\"\n          }\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"showLegend\": true,\n          \"calcs\": []\n        },\n      \
+    \  \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"desc\"\
+    \n        }\n      }\n    },\n    {\n      \"type\": \"timeseries\",\n      \"\
+    title\": \"Trafico por codigo de respuesta\",\n      \"datasource\": {\n     \
+    \   \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n   \
+    \   \"description\": \"Peticiones por segundo desglosadas por codigo. Permite\
+    \ distinguir un pico de trafico legitimo de una oleada de errores.\",\n      \"\
+    gridPos\": {\n        \"h\": 8,\n        \"w\": 12,\n        \"x\": 12,\n    \
+    \    \"y\": 15\n      },\n      \"targets\": [\n        {\n          \"datasource\"\
+    : {\n            \"type\": \"prometheus\",\n            \"uid\": \"prometheus\"\
+    \n          },\n          \"expr\": \"sum(rate(http_requests_total[5m])) by (status_code)\"\
+    ,\n          \"legendFormat\": \"HTTP {{status_code}}\",\n          \"refId\"\
+    : \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n        \"defaults\":\
+    \ {\n          \"unit\": \"reqps\",\n          \"color\": {\n            \"mode\"\
+    : \"palette-classic\"\n          },\n          \"custom\": {\n            \"drawStyle\"\
+    : \"line\",\n            \"lineWidth\": 2,\n            \"fillOpacity\": 12,\n\
+    \            \"showPoints\": \"never\",\n            \"spanNulls\": true,\n  \
+    \          \"axisLabel\": \"\",\n            \"gradientMode\": \"opacity\"\n \
+    \         }\n        },\n        \"overrides\": []\n      },\n      \"options\"\
+    : {\n        \"legend\": {\n          \"displayMode\": \"list\",\n          \"\
+    placement\": \"bottom\",\n          \"showLegend\": true,\n          \"calcs\"\
+    : []\n        },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n   \
+    \       \"sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"type\"\
+    : \"row\",\n      \"title\": \"Metricas de negocio\",\n      \"collapsed\": false,\n\
+    \      \"gridPos\": {\n        \"h\": 1,\n        \"w\": 24,\n        \"x\": 0,\n\
+    \        \"y\": 23\n      },\n      \"panels\": []\n    },\n    {\n      \"type\"\
+    : \"timeseries\",\n      \"title\": \"Tareas pendientes\",\n      \"datasource\"\
+    : {\n        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n    \
+    \  },\n      \"description\": \"Estado del dominio de la aplicacion. El monitoreo\
+    \ no se limita a la infraestructura: tambien observa si el negocio se comporta\
+    \ como se espera.\",\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\":\
+    \ 8,\n        \"x\": 0,\n        \"y\": 24\n      },\n      \"targets\": [\n \
+    \       {\n          \"datasource\": {\n            \"type\": \"prometheus\",\n\
+    \            \"uid\": \"prometheus\"\n          },\n          \"expr\": \"sum(tasks_pending)\"\
+    ,\n          \"legendFormat\": \"pendientes\",\n          \"refId\": \"A\"\n \
+    \       }\n      ],\n      \"fieldConfig\": {\n        \"defaults\": {\n     \
+    \     \"unit\": \"none\",\n          \"color\": {\n            \"mode\": \"palette-classic\"\
+    \n          },\n          \"custom\": {\n            \"drawStyle\": \"line\",\n\
+    \            \"lineWidth\": 2,\n            \"fillOpacity\": 12,\n           \
+    \ \"showPoints\": \"never\",\n            \"spanNulls\": true,\n            \"\
+    axisLabel\": \"\",\n            \"gradientMode\": \"opacity\"\n          }\n \
+    \       },\n        \"overrides\": []\n      },\n      \"options\": {\n      \
+    \  \"legend\": {\n          \"displayMode\": \"list\",\n          \"placement\"\
+    : \"bottom\",\n          \"showLegend\": true,\n          \"calcs\": []\n    \
+    \    },\n        \"tooltip\": {\n          \"mode\": \"multi\",\n          \"\
+    sort\": \"desc\"\n        }\n      }\n    },\n    {\n      \"type\": \"timeseries\"\
+    ,\n      \"title\": \"Tareas creadas y completadas\",\n      \"datasource\": {\n\
+    \        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n\
+    \      \"description\": \"Ritmo de creacion frente a finalizacion de tareas.\"\
+    ,\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 8,\n        \"x\":\
+    \ 8,\n        \"y\": 24\n      },\n      \"targets\": [\n        {\n         \
+    \ \"datasource\": {\n            \"type\": \"prometheus\",\n            \"uid\"\
+    : \"prometheus\"\n          },\n          \"expr\": \"sum(rate(tasks_created_total[5m]))\
+    \ * 60\",\n          \"legendFormat\": \"creadas/min\",\n          \"refId\":\
+    \ \"A\"\n        },\n        {\n          \"datasource\": {\n            \"type\"\
+    : \"prometheus\",\n            \"uid\": \"prometheus\"\n          },\n       \
+    \   \"expr\": \"sum(rate(tasks_completed_total[5m])) * 60\",\n          \"legendFormat\"\
+    : \"completadas/min\",\n          \"refId\": \"B\"\n        }\n      ],\n    \
+    \  \"fieldConfig\": {\n        \"defaults\": {\n          \"unit\": \"none\",\n\
+    \          \"color\": {\n            \"mode\": \"palette-classic\"\n         \
+    \ },\n          \"custom\": {\n            \"drawStyle\": \"line\",\n        \
+    \    \"lineWidth\": 2,\n            \"fillOpacity\": 12,\n            \"showPoints\"\
+    : \"never\",\n            \"spanNulls\": true,\n            \"axisLabel\": \"\"\
+    ,\n            \"gradientMode\": \"opacity\"\n          }\n        },\n      \
+    \  \"overrides\": []\n      },\n      \"options\": {\n        \"legend\": {\n\
+    \          \"displayMode\": \"list\",\n          \"placement\": \"bottom\",\n\
+    \          \"showLegend\": true,\n          \"calcs\": []\n        },\n      \
+    \  \"tooltip\": {\n          \"mode\": \"multi\",\n          \"sort\": \"desc\"\
+    \n        }\n      }\n    },\n    {\n      \"type\": \"timeseries\",\n      \"\
+    title\": \"Retraso del bucle de eventos de Node\",\n      \"datasource\": {\n\
+    \        \"type\": \"prometheus\",\n        \"uid\": \"prometheus\"\n      },\n\
+    \      \"description\": \"Tiempo que el bucle de eventos tarda en atender una\
+    \ tarea. Un retraso creciente indica que el proceso esta bloqueado por operaciones\
+    \ sincronas.\",\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 8,\n\
+    \        \"x\": 16,\n        \"y\": 24\n      },\n      \"targets\": [\n     \
+    \   {\n          \"datasource\": {\n            \"type\": \"prometheus\",\n  \
+    \          \"uid\": \"prometheus\"\n          },\n          \"expr\": \"avg(nodejs_eventloop_lag_seconds{application=\\\
+    \"devops-task-api\\\"})\",\n          \"legendFormat\": \"retraso medio\",\n \
+    \         \"refId\": \"A\"\n        }\n      ],\n      \"fieldConfig\": {\n  \
+    \      \"defaults\": {\n          \"unit\": \"s\",\n          \"color\": {\n \
+    \           \"mode\": \"palette-classic\"\n          },\n          \"custom\"\
+    : {\n            \"drawStyle\": \"line\",\n            \"lineWidth\": 2,\n   \
+    \         \"fillOpacity\": 12,\n            \"showPoints\": \"never\",\n     \
+    \       \"spanNulls\": true,\n            \"axisLabel\": \"\",\n            \"\
+    gradientMode\": \"opacity\"\n          }\n        },\n        \"overrides\": []\n\
+    \      },\n      \"options\": {\n        \"legend\": {\n          \"displayMode\"\
+    : \"list\",\n          \"placement\": \"bottom\",\n          \"showLegend\": true,\n\
+    \          \"calcs\": []\n        },\n        \"tooltip\": {\n          \"mode\"\
+    : \"multi\",\n          \"sort\": \"desc\"\n        }\n      }\n    }\n  ]\n}"
+kind: ConfigMap
+metadata:
+  name: devops-task-api-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: '1'
+    app: devops-task-api

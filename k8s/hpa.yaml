@@ -2,6 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: devops-task-api
+  namespace: devops-lab
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

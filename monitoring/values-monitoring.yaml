@@ -1,0 +1,85 @@
+# Valores de instalacion de kube-prometheus-stack.
+#
+# El chart despliega, en un solo paso, el Prometheus Operator, Prometheus,
+# Alertmanager, Grafana, node-exporter y kube-state-metrics. Se ajustan los
+# recursos a la baja porque el destino es un cluster de laboratorio de un solo
+# nodo, no un entorno productivo.
+
+fullnameOverride: monitoring
+
+grafana:
+  enabled: true
+  # Credenciales de laboratorio. En un entorno real irian en un Secret gestionado
+  # fuera del repositorio (Sealed Secrets, External Secrets o Vault).
+  adminUser: admin
+  adminPassword: devops2026
+  service:
+    type: ClusterIP
+  # Permite que Grafana descubra dashboards declarados como ConfigMap, lo que
+  # mantiene los tableros versionados en Git en lugar de creados a mano.
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      searchNamespace: ALL
+  # Acceso anonimo de solo lectura. Es una decision propia de un entorno de
+  # laboratorio: permite consultar y capturar los tableros sin gestionar
+  # sesiones. En produccion se sustituiria por autenticacion delegada (OIDC,
+  # LDAP o SAML), nunca por acceso abierto.
+  grafana.ini:
+    auth.anonymous:
+      enabled: true
+      org_role: Viewer
+    auth:
+      disable_login_form: false
+    security:
+      allow_embedding: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+
+prometheus:
+  prometheusSpec:
+    retention: 6h
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+    # Sin estos selectores en false, el operador solo adoptaria los recursos
+    # creados por el propio chart y omitiria nuestro ServiceMonitor.
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 2Gi
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+
+# Componentes que no aplican a un cluster k3s de un solo nodo: sus metricas las
+# expone el propio proceso de k3s y los objetivos quedarian permanentemente caidos.
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeEtcd:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+kubeStateMetrics:
+  enabled: true

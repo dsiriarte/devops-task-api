@@ -82,10 +82,13 @@ jobs:
           retention-days: 7
 
   # -------------------------------------------------------------------------
-  # 3. Analisis de vulnerabilidades en dependencias (DevSecOps)
+  # 3. Analisis de composicion de software (DevSecOps)
+  #    Dos herramientas con bases de datos distintas: npm audit cubre el arbol
+  #    de dependencias declaradas y Trivy anade las bases de datos de CVE de
+  #    distribuciones y del ecosistema. Una encuentra lo que la otra omite.
   # -------------------------------------------------------------------------
   security:
-    name: Auditoria de dependencias
+    name: Analisis de dependencias
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del codigo
@@ -102,6 +105,16 @@ jobs:
 
       - name: npm audit (falla ante vulnerabilidades altas o criticas)
         run: npm audit --audit-level=high
+
+      - name: Trivy sobre el codigo y el arbol de dependencias
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          format: table
 
   # -------------------------------------------------------------------------
   # 4. Construccion de la imagen Docker
@@ -128,6 +141,16 @@ jobs:
           tags: devops-task-api:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Trivy sobre la imagen construida
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: image
+          image-ref: devops-task-api:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          format: table
 
       - name: Prueba de humo del contenedor
         run: |

@@ -1,0 +1,108 @@
+# Reglas de alerta de la aplicacion.
+#
+# Cada regla sigue el mismo criterio de diseno: alertar sobre sintomas que el
+# usuario percibe (errores, lentitud, caida del servicio) y no sobre causas
+# internas. Una alerta que nadie puede accionar solo genera ruido y termina
+# ignorandose, que es la forma mas comun en que muere un sistema de alertas.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: devops-task-api-alertas
+  namespace: devops-lab
+  labels:
+    app: devops-task-api
+    release: monitoring
+spec:
+  groups:
+    - name: devops-task-api.disponibilidad
+      rules:
+        - alert: AplicacionCaida
+          # Ningun pod responde a la recoleccion de metricas durante 1 minuto.
+          expr: |
+            absent(up{job="devops-task-api"} == 1)
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'La aplicacion no responde'
+            description: >-
+              Ninguna instancia de devops-task-api respondio a la recoleccion de
+              metricas en el ultimo minuto. El servicio esta caido o aislado de
+              la red del cluster.
+
+        - alert: PodsInsuficientes
+          # El deployment declara 3 replicas; menos de 2 disponibles implica que
+          # se perdio la tolerancia a fallos.
+          expr: |
+            kube_deployment_status_replicas_available{namespace="devops-lab", deployment="devops-task-api"} < 2
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'Replicas disponibles por debajo del minimo tolerable'
+            description: >-
+              El deployment tiene menos de 2 replicas disponibles. Se perdio la
+              redundancia y una caida adicional dejaria el servicio sin atender.
+
+        - alert: ReinicioFrecuenteDePods
+          expr: |
+            increase(kube_pod_container_status_restarts_total{namespace="devops-lab"}[10m]) > 2
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'Un pod se esta reiniciando repetidamente'
+            description: >-
+              Se registraron mas de dos reinicios en diez minutos, sintoma tipico
+              de un CrashLoopBackOff por fallo de arranque o falta de memoria.
+
+    - name: devops-task-api.rendimiento
+      rules:
+        - alert: TasaDeErroresElevada
+          # Mas del 5% de las respuestas son errores del servidor.
+          expr: |
+            sum(rate(http_requests_total{status_code=~"5.."}[5m]))
+              /
+            sum(rate(http_requests_total[5m])) > 0.05
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: 'Mas del 5% de las peticiones devuelven error 5xx'
+            description: >-
+              La tasa de errores del servidor supera el umbral aceptable. Indica
+              un fallo en la aplicacion, no en el cliente.
+
+        - alert: LatenciaAlta
+          # El percentil 95 de la latencia supera medio segundo.
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+            ) > 0.5
+          for: 3m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'La latencia p95 supera 500 ms'
+            description: >-
+              El 5% de las peticiones mas lentas tarda mas de medio segundo. Se
+              alerta sobre el percentil 95 y no sobre el promedio porque el
+              promedio esconde justamente los casos que el usuario sufre.
+
+    - name: devops-task-api.recursos
+      rules:
+        - alert: MemoriaCercaDelLimite
+          expr: |
+            container_memory_working_set_bytes{namespace="devops-lab", pod=~"devops-task-api-.*"}
+              /
+            on(pod) kube_pod_container_resource_limits{namespace="devops-lab", container="devops-task-api", resource="memory"}
+            > 0.85
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: 'Consumo de memoria por encima del 85% del limite'
+            description: >-
+              El contenedor se acerca a su limite de memoria. Al alcanzarlo,
+              Kubernetes lo terminara por OOMKill y el pod se reiniciara.

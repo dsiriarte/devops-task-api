@@ -1,0 +1,218 @@
+// ---------------------------------------------------------------------------
+// Pipeline de Entrega Continua ejecutado contra la infraestructura local.
+//
+// A diferencia del Jenkinsfile de la raiz —que apunta a un registro remoto y a
+// un cluster gestionado— esta variante trabaja contra el entorno del
+// laboratorio: el demonio Docker de colima, la instancia de SonarQube en
+// contenedor y el cluster k3s local. Todos los stages se ejecutan de verdad.
+//
+// El analisis de SonarQube vive en este pipeline y no en GitHub Actions por una
+// razon de arquitectura, no de comodidad: SonarQube es una instancia
+// autoalojada y solo accesible desde la red local. Los runners de GitHub, al
+// estar en la nube, no pueden alcanzarla. Esta es la misma disposicion que
+// adoptan las organizaciones que ejecutan SonarQube dentro de su perimetro.
+// ---------------------------------------------------------------------------
+
+pipeline {
+    agent any
+
+    environment {
+        PATH             = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
+        IMAGE_NAME       = 'devops-task-api'
+        IMAGE_TAG        = "1.1.${env.BUILD_NUMBER}"
+        SONAR_HOST_URL   = 'http://localhost:9000'
+        KUBE_NAMESPACE   = 'devops-lab'
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '15'))
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'staging', 'prod'],
+               description: 'Entorno de destino del despliegue')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo '=== STAGE 1: Obteniendo el codigo fuente ==='
+                checkout scm
+                sh 'git log --oneline -1'
+                script {
+                    env.GIT_COMMIT_SHORT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                }
+            }
+        }
+
+        stage('Instalar dependencias') {
+            steps {
+                echo '=== STAGE 2: Instalando dependencias ==='
+                sh 'npm ci'
+            }
+        }
+
+        stage('Calidad y pruebas') {
+            parallel {
+                stage('Analisis estatico') {
+                    steps {
+                        echo '=== STAGE 3a: ESLint ==='
+                        sh 'npm run lint'
+                    }
+                }
+                stage('Pruebas automatizadas') {
+                    steps {
+                        echo '=== STAGE 3b: Jest con cobertura ==='
+                        sh 'npm test'
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true
+                        }
+                    }
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // Analisis estatico profundo con SonarQube.
+        // El escaner corre en contenedor para no exigir Java ni el CLI en el
+        // agente. Se le pasa el informe de cobertura generado en el stage
+        // anterior: sin el, SonarQube reportaria 0% aunque las pruebas existan.
+        // -------------------------------------------------------------------
+        stage('Analisis SonarQube') {
+            steps {
+                echo '=== STAGE 4: Analisis estatico con SonarQube ==='
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        docker run --rm --network host \
+                            -v "$WORKSPACE:/usr/src" \
+                            -e SONAR_HOST_URL="${SONAR_HOST_URL}" \
+                            -e SONAR_TOKEN="${SONAR_TOKEN}" \
+                            sonarsource/sonar-scanner-cli:latest \
+                            -Dsonar.projectVersion=${IMAGE_TAG}
+                    '''
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // La puerta de calidad convierte el analisis en un control efectivo.
+        // Sin ella SonarQube seria un informe que nadie lee; con ella, un
+        // resultado adverso detiene la entrega.
+        // -------------------------------------------------------------------
+        stage('Puerta de calidad') {
+            steps {
+                echo '=== STAGE 5: Verificando la puerta de calidad ==='
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        sleep 15
+                        estado=$(curl -s -u "${SONAR_TOKEN}:" \
+                            "${SONAR_HOST_URL}/api/qualitygates/project_status?projectKey=devops-task-api" \
+                            | sed -n 's/.*"status":"\\([A-Z]*\\)".*/\\1/p' | head -1)
+                        echo "Estado de la puerta de calidad: ${estado}"
+                        if [ "$estado" != "OK" ]; then
+                            echo "La puerta de calidad no se supero. Se detiene la entrega."
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage('Construir imagen Docker') {
+            steps {
+                echo '=== STAGE 6: Construyendo la imagen ==='
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .'
+                sh 'docker images ${IMAGE_NAME} --format "{{.Repository}}:{{.Tag}} {{.Size}}"'
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // Escaneo de la imagen ya construida. Cubre lo que el analisis del
+        // codigo no ve: el sistema operativo base y las dependencias
+        // transitivas que llegan dentro de la imagen.
+        // -------------------------------------------------------------------
+        stage('Escaneo de la imagen (Trivy)') {
+            steps {
+                echo '=== STAGE 7: Escaneo de vulnerabilidades de la imagen ==='
+                sh '''
+                    docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        -v "$WORKSPACE:/salida" \
+                        aquasec/trivy:latest image \
+                        --severity HIGH,CRITICAL --ignore-unfixed \
+                        --exit-code 1 \
+                        --format table \
+                        --output /salida/trivy-reporte.txt \
+                        ${IMAGE_NAME}:${IMAGE_TAG} || resultado=$?
+                    cat trivy-reporte.txt
+                    exit ${resultado:-0}
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'trivy-reporte.txt', allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Desplegar en Kubernetes') {
+            steps {
+                echo "=== STAGE 8: Desplegando en el namespace ${KUBE_NAMESPACE} ==="
+                sh '''
+                    sed -i.bak "s|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|" k8s/deployment.yaml
+                    rm -f k8s/deployment.yaml.bak
+                    grep "image:" k8s/deployment.yaml
+
+                    kubectl apply -f k8s/namespace.yaml
+                    kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/hpa.yaml
+                    kubectl apply -f k8s/servicemonitor.yaml
+                    kubectl -n ${KUBE_NAMESPACE} rollout status deployment/${IMAGE_NAME} --timeout=180s
+                '''
+            }
+        }
+
+        stage('Verificacion post-despliegue') {
+            steps {
+                echo '=== STAGE 9: Prueba de humo contra el servicio desplegado ==='
+                sh '''
+                    kubectl -n ${KUBE_NAMESPACE} get pods -l app=${IMAGE_NAME}
+                    kubectl -n ${KUBE_NAMESPACE} run verificacion-${BUILD_NUMBER} \
+                        --rm -i --restart=Never --quiet \
+                        --image=curlimages/curl:latest \
+                        --overrides='{"spec":{"securityContext":{"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}},"containers":[{"name":"verificacion-'"${BUILD_NUMBER}"'","image":"curlimages/curl:latest","securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},"command":["sh","-c","curl -sf http://devops-task-api/healthz && echo && curl -sf http://devops-task-api/metrics | head -3"]}]}}'
+                '''
+            }
+        }
+
+        stage('Aprobacion para produccion') {
+            when {
+                expression { return params.DEPLOY_ENV == 'prod' }
+            }
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    input message: "Confirmar la promocion de ${IMAGE_TAG} a produccion", ok: 'Promover'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Despliegue exitoso: ${IMAGE_NAME}:${IMAGE_TAG} en ${KUBE_NAMESPACE}"
+        }
+        failure {
+            echo 'El pipeline fallo. Revirtiendo a la revision anterior...'
+            sh 'kubectl -n ${KUBE_NAMESPACE} rollout undo deployment/${IMAGE_NAME} || true'
+        }
+        always {
+            sh 'docker image prune -f > /dev/null 2>&1 || true'
+            cleanWs()
+        }
+    }
+}
