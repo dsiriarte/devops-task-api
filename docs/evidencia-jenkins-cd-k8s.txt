@@ -1,0 +1,678 @@
+Started by user admin
+Checking out git file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD into /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s@script/5750bd034c06c15e8e7eaa0db79b9c2c554ab83371a72d280a7d9b0c1fcd1770 to read jenkins/Jenkinsfile.local
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git init /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s@script/5750bd034c06c15e8e7eaa0db79b9c2c554ab83371a72d280a7d9b0c1fcd1770 # timeout=10
+Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1 (Apple Git-155)'
+ > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 96e257b9c76716ca40cfae81756748b13528a565 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 96e257b9c76716ca40cfae81756748b13528a565 # timeout=10
+Commit message: "feat: instrumentacion de metricas, seguridad y despliegue en Kubernetes"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git init /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s # timeout=10
+Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1 (Apple Git-155)'
+ > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 96e257b9c76716ca40cfae81756748b13528a565 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 96e257b9c76716ca40cfae81756748b13528a565 # timeout=10
+Commit message: "feat: instrumentacion de metricas, seguridad y despliegue en Kubernetes"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timeout
+Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] echo
+[2026-08-31T03:16:11.447Z] === STAGE 1: Obteniendo el codigo fuente ===
+[Pipeline] checkout
+[2026-08-31T03:16:11.472Z] The recommended git tool is: NONE
+[2026-08-31T03:16:11.472Z] No credentials specified
+[2026-08-31T03:16:11.473Z]  > git rev-parse --resolve-git-dir /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s/.git # timeout=10
+[2026-08-31T03:16:11.486Z] Fetching changes from the remote Git repository
+[2026-08-31T03:16:11.490Z]  > git config remote.origin.url file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD # timeout=10
+[2026-08-31T03:16:11.502Z] Fetching upstream changes from file:///Users/santiagoiriarte/Documents/Maestria/Fundamento de devops/unidad 2/Actividad3_Lab_CICD
+[2026-08-31T03:16:11.502Z]  > git --version # timeout=10
+[2026-08-31T03:16:11.514Z]  > git --version # 'git version 2.50.1 (Apple Git-155)'
+[2026-08-31T03:16:11.514Z]  > git fetch --tags --force --progress -- file:///Users/santiagoiriarte/Documents/Maestria/Fundamento%20de%20devops/unidad%202/Actividad3_Lab_CICD +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-08-31T03:16:11.540Z]  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+[2026-08-31T03:16:11.552Z] Checking out Revision 96e257b9c76716ca40cfae81756748b13528a565 (refs/remotes/origin/main)
+[2026-08-31T03:16:11.552Z]  > git config core.sparsecheckout # timeout=10
+[2026-08-31T03:16:11.564Z]  > git checkout -f 96e257b9c76716ca40cfae81756748b13528a565 # timeout=10
+[2026-08-31T03:16:11.604Z] Commit message: "feat: instrumentacion de metricas, seguridad y despliegue en Kubernetes"
+[Pipeline] sh
+[2026-08-31T03:16:11.906Z] + git log --oneline -1
+[2026-08-31T03:16:11.907Z] 96e257b feat: instrumentacion de metricas, seguridad y despliegue en Kubernetes
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
+[2026-08-31T03:16:12.253Z] + git rev-parse --short HEAD
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Instalar dependencias)
+[Pipeline] echo
+[2026-08-31T03:16:12.458Z] === STAGE 2: Instalando dependencias ===
+[Pipeline] sh
+[2026-08-31T03:16:12.743Z] + npm ci
+[2026-08-31T03:16:13.297Z] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[2026-08-31T03:16:13.297Z] npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[2026-08-31T03:16:13.552Z] npm warn deprecated prom-client@15.1.3: prom-client has been replaced by @prometheus-io/client
+[2026-08-31T03:16:13.552Z] 
+[2026-08-31T03:16:13.552Z] added 425 packages, and audited 426 packages in 839ms
+[2026-08-31T03:16:13.552Z] 
+[2026-08-31T03:16:13.552Z] 69 packages are looking for funding
+[2026-08-31T03:16:13.552Z]   run `npm fund` for details
+[2026-08-31T03:16:13.552Z] 
+[2026-08-31T03:16:13.552Z] found 0 vulnerabilities
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Calidad y pruebas)
+[Pipeline] parallel
+[Pipeline] { (Branch: Analisis estatico)
+[Pipeline] { (Branch: Pruebas automatizadas)
+[Pipeline] stage
+[Pipeline] { (Analisis estatico)
+[Pipeline] stage
+[Pipeline] { (Pruebas automatizadas)
+[Pipeline] echo
+[2026-08-31T03:16:14.091Z] === STAGE 3a: ESLint ===
+[Pipeline] sh
+[Pipeline] echo
+[2026-08-31T03:16:14.141Z] === STAGE 3b: Jest con cobertura ===
+[Pipeline] sh
+[2026-08-31T03:16:14.371Z] + npm run lint
+[2026-08-31T03:16:14.372Z] 
+[2026-08-31T03:16:14.372Z] > devops-task-api@1.1.0 lint
+[2026-08-31T03:16:14.372Z] > eslint .
+[2026-08-31T03:16:14.372Z] 
+[2026-08-31T03:16:14.423Z] + npm test
+[2026-08-31T03:16:14.423Z] 
+[2026-08-31T03:16:14.423Z] > devops-task-api@1.1.0 test
+[2026-08-31T03:16:14.423Z] > jest --coverage --runInBand
+[2026-08-31T03:16:14.423Z] 
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[2026-08-31T03:16:15.778Z] PASS tests/tasks.api.test.js
+[2026-08-31T03:16:15.778Z] PASS tests/metrics.test.js
+[2026-08-31T03:16:15.778Z] PASS tests/taskStore.test.js
+[2026-08-31T03:16:15.778Z] PASS tests/health.test.js
+[2026-08-31T03:16:15.778Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:16:15.778Z] File           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+[2026-08-31T03:16:15.778Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:16:15.778Z] All files      |     100 |    83.33 |     100 |     100 |                   
+[2026-08-31T03:16:15.778Z]  src           |     100 |     62.5 |     100 |     100 |                   
+[2026-08-31T03:16:15.778Z]   app.js       |     100 |       50 |     100 |     100 | 40-42             
+[2026-08-31T03:16:15.778Z]   metrics.js   |     100 |       75 |     100 |     100 | 24                
+[2026-08-31T03:16:15.778Z]  src/routes    |     100 |       75 |     100 |     100 |                   
+[2026-08-31T03:16:15.778Z]   health.js    |     100 |       50 |     100 |     100 | 25-26             
+[2026-08-31T03:16:15.778Z]   tasks.js     |     100 |     87.5 |     100 |     100 | 23                
+[2026-08-31T03:16:15.778Z]  src/services  |     100 |      100 |     100 |     100 |                   
+[2026-08-31T03:16:15.778Z]   taskStore.js |     100 |      100 |     100 |     100 |                   
+[2026-08-31T03:16:15.778Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:16:15.778Z] 
+[2026-08-31T03:16:15.778Z] Test Suites: 4 passed, 4 total
+[2026-08-31T03:16:15.778Z] Tests:       30 passed, 30 total
+[2026-08-31T03:16:15.778Z] Snapshots:   0 total
+[2026-08-31T03:16:15.778Z] Time:        0.433 s
+[2026-08-31T03:16:15.778Z] Ran all test suites.
+Post stage
+[Pipeline] archiveArtifacts
+[2026-08-31T03:16:15.857Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Analisis SonarQube)
+[Pipeline] echo
+[2026-08-31T03:16:16.126Z] === STAGE 4: Analisis estatico con SonarQube ===
+[Pipeline] withCredentials
+[2026-08-31T03:16:16.189Z] Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-08-31T03:16:16.499Z] + docker run --rm --network host -v /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s:/usr/src -e SONAR_HOST_URL=http://localhost:9000 -e SONAR_TOKEN=**** sonarsource/sonar-scanner-cli:latest -Dsonar.projectVersion=1.1.1
+[2026-08-31T03:16:16.499Z] WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+[2026-08-31T03:16:18.370Z] 03:16:18.164 INFO  Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+[2026-08-31T03:16:18.370Z] 03:16:18.175 INFO  Project root configuration file: /usr/src/sonar-project.properties
+[2026-08-31T03:16:18.370Z] 03:16:18.226 INFO  SonarScanner CLI 8.0.1.6346
+[2026-08-31T03:16:18.371Z] 03:16:18.256 INFO  Linux 6.8.0-117-generic amd64
+[2026-08-31T03:16:23.584Z] 03:16:22.560 INFO  Communicating with SonarQube Community Build 26.8.0.126808
+[2026-08-31T03:16:23.584Z] 03:16:22.572 INFO  JRE provisioning: os[linux], arch[x86_64]
+[2026-08-31T03:16:28.804Z] 03:16:28.753 INFO  Starting SonarScanner Engine...
+[2026-08-31T03:16:28.804Z] 03:16:28.754 INFO  Java 21.0.11 Eclipse Adoptium (64-bit)
+[2026-08-31T03:16:34.023Z] 03:16:33.999 INFO  Load global settings
+[2026-08-31T03:16:34.276Z] 03:16:34.265 INFO  Load global settings (done) | time=259ms
+[2026-08-31T03:16:34.276Z] 03:16:34.281 INFO  Server id: 147B411E-AaBVwCA5D1T6ZyVCyTk6
+[2026-08-31T03:16:34.527Z] 03:16:34.333 INFO  Loading required plugins
+[2026-08-31T03:16:34.527Z] 03:16:34.334 INFO  Load plugins index
+[2026-08-31T03:16:34.527Z] 03:16:34.370 INFO  Load plugins index (done) | time=36ms
+[2026-08-31T03:16:34.527Z] 03:16:34.372 INFO  Load/download plugins
+[2026-08-31T03:16:35.086Z] 03:16:34.954 INFO  Load/download plugins (done) | time=581ms
+[2026-08-31T03:16:36.964Z] 03:16:36.540 INFO  Process project properties
+[2026-08-31T03:16:36.964Z] 03:16:36.580 INFO  Process project properties (done) | time=41ms
+[2026-08-31T03:16:36.964Z] 03:16:36.620 INFO  Project key: devops-task-api
+[2026-08-31T03:16:36.964Z] 03:16:36.621 INFO  Base dir: /usr/src
+[2026-08-31T03:16:36.964Z] 03:16:36.622 INFO  Working dir: /tmp/.scannerwork
+[2026-08-31T03:16:36.964Z] 03:16:36.658 INFO  Load project settings for component key: 'devops-task-api'
+[2026-08-31T03:16:36.964Z] 03:16:36.686 INFO  Load project settings for component key: 'devops-task-api' (done) | time=28ms
+[2026-08-31T03:16:36.964Z] 03:16:36.787 INFO  Load quality profiles
+[2026-08-31T03:16:36.964Z] 03:16:36.883 INFO  Load quality profiles (done) | time=96ms
+[2026-08-31T03:16:37.217Z] 03:16:37.059 INFO  Load active rules
+[2026-08-31T03:16:38.140Z] 03:16:37.878 INFO  Load active rules (done) | time=817ms
+[2026-08-31T03:16:38.140Z] 03:16:37.910 INFO  Load analysis cache
+[2026-08-31T03:16:38.140Z] 03:16:37.939 INFO  Load analysis cache | time=30ms
+[2026-08-31T03:16:38.699Z] 03:16:38.540 INFO  Preprocessing files...
+[2026-08-31T03:16:38.952Z] 03:16:38.771 INFO  1 language detected in 12 preprocessed files (done) | time=229ms
+[2026-08-31T03:16:38.952Z] 03:16:38.773 INFO  0 files ignored because of inclusion/exclusion patterns
+[2026-08-31T03:16:38.952Z] 03:16:38.773 INFO  0 files ignored because of scm ignore settings
+[2026-08-31T03:16:38.952Z] 03:16:38.784 INFO  Loading plugins for detected languages
+[2026-08-31T03:16:38.952Z] 03:16:38.786 INFO  Load/download plugins
+[2026-08-31T03:16:39.871Z] 03:16:39.683 INFO  Load/download plugins (done) | time=897ms
+[2026-08-31T03:16:41.223Z] 03:16:40.936 INFO  Load project repositories
+[2026-08-31T03:16:41.474Z] 03:16:41.289 INFO  Load project repositories (done) | time=353ms
+[2026-08-31T03:16:41.474Z] 03:16:41.453 INFO  Indexing files...
+[2026-08-31T03:16:41.474Z] 03:16:41.454 INFO  Project configuration:
+[2026-08-31T03:16:41.474Z] 03:16:41.461 INFO    Excluded sources: node_modules/**, coverage/**, docs/**, public/**
+[2026-08-31T03:16:41.725Z] 03:16:41.528 INFO  12 files indexed (done) | time=72ms
+[2026-08-31T03:16:41.725Z] 03:16:41.532 INFO  Quality profile for js: Sonar way
+[2026-08-31T03:16:41.725Z] 03:16:41.533 INFO  ------------- Run sensors on module DevOps Task API
+[2026-08-31T03:16:41.725Z] 03:16:41.722 INFO  Load metrics repository
+[2026-08-31T03:16:41.981Z] 03:16:41.814 INFO  Load metrics repository (done) | time=93ms
+[2026-08-31T03:16:43.335Z] 03:16:42.966 INFO  Reflections took 279 ms to scan 1 urls, producing 30 keys and 295 values
+[2026-08-31T03:16:43.889Z] 03:16:43.842 INFO  Sensor IaC hadolint report Sensor [iac]
+[2026-08-31T03:16:43.889Z] 03:16:43.856 INFO  Sensor IaC hadolint report Sensor [iac] (done) | time=29ms
+[2026-08-31T03:16:43.889Z] 03:16:43.857 INFO  Sensor Java Config Sensor [iac]
+[2026-08-31T03:16:44.141Z] 03:16:44.105 INFO  There are no files to be analyzed for the Java language
+[2026-08-31T03:16:44.141Z] 03:16:44.106 INFO  Sensor Java Config Sensor [iac] (done) | time=247ms
+[2026-08-31T03:16:44.141Z] 03:16:44.107 INFO  Sensor IaC Docker Sensor [iac]
+[2026-08-31T03:16:44.141Z] 03:16:44.117 INFO  There are no files to be analyzed for the Docker language
+[2026-08-31T03:16:44.141Z] 03:16:44.118 INFO  Sensor IaC Docker Sensor [iac] (done) | time=12ms
+[2026-08-31T03:16:44.141Z] 03:16:44.119 INFO  Sensor HTML [web]
+[2026-08-31T03:16:44.141Z] 03:16:44.140 INFO  Sensor HTML [web] (done) | time=22ms
+[2026-08-31T03:16:44.141Z] 03:16:44.141 INFO  Sensor JavaScript/TypeScript Coverage [javascript]
+[2026-08-31T03:16:44.141Z] 03:16:44.142 INFO  Analysing [/usr/src/coverage/lcov.info]
+[2026-08-31T03:16:44.396Z] 03:16:44.243 INFO  Sensor JavaScript/TypeScript Coverage [javascript] (done) | time=102ms
+[2026-08-31T03:16:44.396Z] 03:16:44.243 INFO  Sensor TextAndSecretsSensor [text]
+[2026-08-31T03:16:44.396Z] 03:16:44.310 INFO  Available processors: 6
+[2026-08-31T03:16:44.396Z] 03:16:44.311 INFO  Using 6 threads for analysis.
+[2026-08-31T03:16:45.315Z] 03:16:45.224 INFO  Start fetching files for the text and secrets analysis
+[2026-08-31T03:16:45.315Z] 03:16:45.274 INFO  Using Git CLI to retrieve dirty files
+[2026-08-31T03:16:45.570Z] 03:16:45.389 INFO  Retrieving language associated files and files included via "sonar.text.inclusions" that are tracked by git
+[2026-08-31T03:16:45.570Z] 03:16:45.392 INFO  Starting the text and secrets analysis
+[2026-08-31T03:16:45.570Z] 03:16:45.400 INFO  12 source files to be analyzed for the text and secrets analysis
+[2026-08-31T03:16:45.570Z] 03:16:45.518 INFO  12/12 source files have been analyzed for the text and secrets analysis
+[2026-08-31T03:16:45.570Z] 03:16:45.531 INFO  Sensor TextAndSecretsSensor [text] (done) | time=1288ms
+[2026-08-31T03:16:45.570Z] 03:16:45.548 INFO  ------------- Run sensors on project
+[2026-08-31T03:16:46.487Z] 03:16:46.320 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript]
+[2026-08-31T03:16:47.044Z] 03:16:46.949 INFO  Detected os: Linux arch: amd64 alpine: false. Platform: LINUX_X64
+[2026-08-31T03:16:47.044Z] 03:16:46.951 INFO  Deploy location /opt/sonar-scanner/.sonar/js/node-runtime, tagetRuntime: /opt/sonar-scanner/.sonar/js/node-runtime/node,  version: /opt/sonar-scanner/.sonar/js/node-runtime/version.txt
+[2026-08-31T03:16:53.552Z] 03:16:52.666 INFO  Using embedded Node.js runtime.
+[2026-08-31T03:16:53.552Z] 03:16:52.667 INFO  Using Node.js executable: '/opt/sonar-scanner/.sonar/js/node-runtime/node'.
+[2026-08-31T03:17:00.068Z] 03:17:00.048 INFO  Memory configuration: OS (11933 MB), Node.js (2240 MB).
+[2026-08-31T03:17:00.323Z] 03:17:00.102 INFO  gRPC analyze-project server listening on 127.0.0.1:41999
+[2026-08-31T03:17:00.883Z] 03:17:00.769 INFO  Plugin version: [13.4.0.43982]
+[2026-08-31T03:17:07.399Z] 03:17:06.594 INFO  Found 0 tsconfig.json file(s): []
+[2026-08-31T03:17:15.458Z] 03:17:14.303 INFO  11 source files to be analyzed
+[2026-08-31T03:17:15.458Z] 03:17:14.306 INFO  Analyzing 11 file(s) using default options [lib: lib.es2024.d.ts, lib.dom.d.ts]
+[2026-08-31T03:17:15.458Z] 03:17:14.307 INFO  11/11 source files have been analyzed
+[2026-08-31T03:17:15.458Z] 03:17:14.341 INFO  Hit the cache for 0 out of 11
+[2026-08-31T03:17:15.458Z] 03:17:14.346 INFO  Miss the cache for 11 out of 11: ANALYSIS_MODE_INELIGIBLE [11/11]
+[2026-08-31T03:17:15.458Z] 03:17:14.347 INFO  Sensor JavaScript/TypeScript/CSS analysis [javascript] (done) | time=28026ms
+[2026-08-31T03:17:15.458Z] 03:17:14.350 INFO  Sensor IaC Project Sensor [iac]
+[2026-08-31T03:17:15.458Z] 03:17:14.359 INFO  Sensor IaC Project Sensor [iac] (done) | time=11ms
+[2026-08-31T03:17:15.458Z] 03:17:14.360 INFO  Sensor Zero Coverage Sensor
+[2026-08-31T03:17:15.458Z] 03:17:14.375 INFO  Sensor Zero Coverage Sensor (done) | time=15ms
+[2026-08-31T03:17:15.458Z] 03:17:14.376 INFO  ------------- Gather SCA dependencies on project
+[2026-08-31T03:17:15.458Z] 03:17:14.444 INFO  Dependency analysis skipped
+[2026-08-31T03:17:15.458Z] 03:17:14.471 INFO  SCM Publisher SCM provider for this project is: git
+[2026-08-31T03:17:15.458Z] 03:17:14.476 INFO  SCM Publisher 4 source files to be analyzed
+[2026-08-31T03:17:15.458Z] 03:17:14.951 INFO  SCM Publisher 4/4 source files have been analyzed (done) | time=472ms
+[2026-08-31T03:17:15.458Z] 03:17:14.993 INFO  CPD Executor Calculating CPD for 7 files
+[2026-08-31T03:17:15.458Z] 03:17:15.024 INFO  CPD Executor CPD calculation finished (done) | time=30ms
+[2026-08-31T03:17:15.458Z] 03:17:15.044 INFO  SCM revision ID '96e257b9c76716ca40cfae81756748b13528a565'
+[2026-08-31T03:17:15.458Z] 03:17:15.367 INFO  Analysis report generated in 319ms, dir size=341.9 kB
+[2026-08-31T03:17:15.458Z] 03:17:15.418 INFO  Analysis report compressed in 49ms, zip size=69.1 kB
+[2026-08-31T03:17:15.711Z] 03:17:15.572 INFO  Analysis report uploaded in 152ms
+[2026-08-31T03:17:15.711Z] 03:17:15.585 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://localhost:9000/dashboard?id=devops-task-api
+[2026-08-31T03:17:15.711Z] 03:17:15.588 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[2026-08-31T03:17:15.711Z] 03:17:15.591 INFO  More about the report processing at http://localhost:9000/api/ce/task?id=e7df1cda-e161-4bf1-9927-fa80dce1cde8
+[2026-08-31T03:17:15.962Z] 03:17:15.829 INFO  Analysis total time: 40.678 s
+[2026-08-31T03:17:15.962Z] 03:17:15.832 INFO  SonarScanner Engine completed successfully
+[2026-08-31T03:17:15.962Z] 03:17:15.866 INFO  EXECUTION SUCCESS
+[2026-08-31T03:17:15.962Z] 03:17:15.870 INFO  Total time: 57.717s
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Puerta de calidad)
+[Pipeline] echo
+[2026-08-31T03:17:16.781Z] === STAGE 5: Verificando la puerta de calidad ===
+[Pipeline] withCredentials
+[2026-08-31T03:17:16.821Z] Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-08-31T03:17:17.138Z] + sleep 15
+[2026-08-31T03:17:31.944Z] ++ curl -s -u ****: 'http://localhost:9000/api/qualitygates/project_status?projectKey=devops-task-api'
+[2026-08-31T03:17:31.944Z] ++ sed -n 's/.*"status":"\([A-Z]*\)".*/\1/p'
+[2026-08-31T03:17:31.944Z] ++ head -1
+[2026-08-31T03:17:31.944Z] + estado=OK
+[2026-08-31T03:17:31.944Z] + echo 'Estado de la puerta de calidad: OK'
+[2026-08-31T03:17:31.944Z] Estado de la puerta de calidad: OK
+[2026-08-31T03:17:31.944Z] + '[' OK '!=' OK ']'
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Construir imagen Docker)
+[Pipeline] echo
+[2026-08-31T03:17:32.149Z] === STAGE 6: Construyendo la imagen ===
+[Pipeline] sh
+[2026-08-31T03:17:32.433Z] + docker build -t devops-task-api:1.1.1 -t devops-task-api:latest .
+[2026-08-31T03:17:32.433Z] DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+[2026-08-31T03:17:32.433Z]             Install the buildx component to build images with BuildKit:
+[2026-08-31T03:17:32.433Z]             https://docs.docker.com/go/buildx/
+[2026-08-31T03:17:32.433Z] 
+[2026-08-31T03:17:32.433Z] Sending build context to Docker daemon  348.2kB[2026-08-31T03:17:32.433Z] 
+[2026-08-31T03:17:32.433Z] Step 1/19 : FROM node:24-alpine AS build
+[2026-08-31T03:17:32.433Z]  ---> e67514e5d0f6
+[2026-08-31T03:17:32.433Z] Step 2/19 : WORKDIR /app
+[2026-08-31T03:17:32.433Z]  ---> Using cache
+[2026-08-31T03:17:32.433Z]  ---> 7d72fa3afc22
+[2026-08-31T03:17:32.433Z] Step 3/19 : COPY package*.json ./
+[2026-08-31T03:17:32.433Z]  ---> Using cache
+[2026-08-31T03:17:32.433Z]  ---> daeb18a936b3
+[2026-08-31T03:17:32.433Z] Step 4/19 : RUN npm ci
+[2026-08-31T03:17:32.433Z]  ---> Using cache
+[2026-08-31T03:17:32.433Z]  ---> bd42fdd5034c
+[2026-08-31T03:17:32.433Z] Step 5/19 : COPY . .
+[2026-08-31T03:17:32.987Z]  ---> 3f7b55a4fd7e
+[2026-08-31T03:17:32.987Z] Step 6/19 : RUN npm run lint && npm test
+[2026-08-31T03:17:32.987Z]  ---> Running in 9794804ce9bb
+[2026-08-31T03:17:32.987Z] 
+[2026-08-31T03:17:32.987Z] > devops-task-api@1.1.0 lint
+[2026-08-31T03:17:32.987Z] > eslint .
+[2026-08-31T03:17:32.987Z] 
+[2026-08-31T03:17:33.539Z] 
+[2026-08-31T03:17:33.539Z] > devops-task-api@1.1.0 test
+[2026-08-31T03:17:33.539Z] > jest --coverage --runInBand
+[2026-08-31T03:17:33.539Z] 
+[2026-08-31T03:17:33.792Z] [91mPASS tests/tasks.api.test.js
+[2026-08-31T03:17:34.044Z] [0m[91mPASS tests/metrics.test.js
+[2026-08-31T03:17:34.044Z] [0m[91mPASS tests/taskStore.test.js
+[2026-08-31T03:17:34.044Z] [0m[91mPASS tests/health.test.js
+[2026-08-31T03:17:34.044Z] [0m---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:17:34.044Z] File           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+[2026-08-31T03:17:34.044Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:17:34.044Z] All files      |     100 |    86.11 |     100 |     100 |                   
+[2026-08-31T03:17:34.044Z]  src           |     100 |     62.5 |     100 |     100 |                   
+[2026-08-31T03:17:34.044Z]   app.js       |     100 |       50 |     100 |     100 | 40-42             
+[2026-08-31T03:17:34.044Z]   metrics.js   |     100 |       75 |     100 |     100 | 24                
+[2026-08-31T03:17:34.044Z]  src/routes    |     100 |    83.33 |     100 |     100 |                   
+[2026-08-31T03:17:34.044Z]   health.js    |     100 |       75 |     100 |     100 | 26                
+[2026-08-31T03:17:34.044Z]   tasks.js     |     100 |     87.5 |     100 |     100 | 23                
+[2026-08-31T03:17:34.044Z]  src/services  |     100 |      100 |     100 |     100 |                   
+[2026-08-31T03:17:34.044Z]   taskStore.js |     100 |      100 |     100 |     100 |                   
+[2026-08-31T03:17:34.044Z] ---------------|---------|----------|---------|---------|-------------------
+[2026-08-31T03:17:34.044Z] [91m
+[2026-08-31T03:17:34.044Z] [0m[91mTest Suites: 4 passed, 4 total
+[2026-08-31T03:17:34.044Z] Tests:       30 passed, 30 total
+[2026-08-31T03:17:34.044Z] Snapshots:   0 total
+[2026-08-31T03:17:34.044Z] Time:        0.514 s
+[2026-08-31T03:17:34.044Z] Ran all test suites.
+[2026-08-31T03:17:34.595Z] [0m ---> Removed intermediate container 9794804ce9bb
+[2026-08-31T03:17:34.595Z]  ---> a18a49062003
+[2026-08-31T03:17:34.595Z] Step 7/19 : FROM node:24-alpine AS runtime
+[2026-08-31T03:17:34.595Z]  ---> e67514e5d0f6
+[2026-08-31T03:17:34.595Z] Step 8/19 : ENV NODE_ENV=production
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> f100670eb78b
+[2026-08-31T03:17:34.595Z] Step 9/19 : WORKDIR /app
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 26e3b0e9aa20
+[2026-08-31T03:17:34.595Z] Step 10/19 : RUN apk upgrade --no-cache
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 5812bcfc6316
+[2026-08-31T03:17:34.595Z] Step 11/19 : COPY package*.json ./
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 1c38db625c44
+[2026-08-31T03:17:34.595Z] Step 12/19 : RUN npm ci --omit=dev && npm cache clean --force
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 935b96c3b067
+[2026-08-31T03:17:34.595Z] Step 13/19 : COPY --from=build /app/src ./src
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> ab33dc564e37
+[2026-08-31T03:17:34.595Z] Step 14/19 : COPY --from=build /app/public ./public
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> c14499eeb32c
+[2026-08-31T03:17:34.595Z] Step 15/19 : RUN rm -rf /usr/local/lib/node_modules/npm            /usr/local/bin/npm            /usr/local/bin/npx            /opt/yarn-*            /usr/local/bin/yarn            /usr/local/bin/yarnpkg
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 88da6ce6cdf1
+[2026-08-31T03:17:34.595Z] Step 16/19 : USER node
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> a94e40897e27
+[2026-08-31T03:17:34.595Z] Step 17/19 : EXPOSE 3000
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 684cfe4bfc4a
+[2026-08-31T03:17:34.595Z] Step 18/19 : HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3   CMD node -e "fetch('http://localhost:3000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> 77198c5121c8
+[2026-08-31T03:17:34.595Z] Step 19/19 : CMD ["node", "src/server.js"]
+[2026-08-31T03:17:34.595Z]  ---> Using cache
+[2026-08-31T03:17:34.595Z]  ---> f39c736a40cd
+[2026-08-31T03:17:34.595Z] Successfully built f39c736a40cd
+[2026-08-31T03:17:34.595Z] Successfully tagged devops-task-api:1.1.1
+[2026-08-31T03:17:34.849Z] Successfully tagged devops-task-api:latest
+[Pipeline] sh
+[2026-08-31T03:17:35.146Z] + docker images devops-task-api --format '{{.Repository}}:{{.Tag}} {{.Size}}'
+[2026-08-31T03:17:35.146Z] devops-task-api:1.1.1 257MB
+[2026-08-31T03:17:35.146Z] devops-task-api:latest 257MB
+[2026-08-31T03:17:35.146Z] devops-task-api:1.1.0 248MB
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Escaneo de la imagen (Trivy))
+[Pipeline] echo
+[2026-08-31T03:17:35.284Z] === STAGE 7: Escaneo de vulnerabilidades de la imagen ===
+[Pipeline] sh
+[2026-08-31T03:17:35.566Z] + docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /Users/santiagoiriarte/.jenkins-lab-devops/workspace/devops-task-api-cd-k8s:/salida aquasec/trivy:latest image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --format table --output /salida/trivy-reporte.txt devops-task-api:1.1.1
+[2026-08-31T03:17:35.566Z] 2026-08-31T03:17:35Z	INFO	[vulndb] Need to update DB
+[2026-08-31T03:17:35.566Z] 2026-08-31T03:17:35Z	INFO	[vulndb] Downloading vulnerability DB...
+[2026-08-31T03:17:35.566Z] 2026-08-31T03:17:35Z	INFO	[vulndb] Downloading artifact...	repo="mirror.gcr.io/aquasec/trivy-db:2"
+[2026-08-31T03:17:41.497Z] 255.25 KiB / 109.86 MiB [>___________________________________________________________] 0.23% ? p/s ?1.85 MiB / 109.86 MiB [->____________________________________________________________] 1.69% ? p/s ?11.22 MiB / 109.86 MiB [------>_____________________________________________________] 10.22% ? p/s ?22.92 MiB / 109.86 MiB [--------->_____________________________________] 20.86% 37.81 MiB p/s ETA 2s34.63 MiB / 109.86 MiB [-------------->________________________________] 31.53% 37.81 MiB p/s ETA 1s46.43 MiB / 109.86 MiB [------------------->___________________________] 42.26% 37.81 MiB p/s ETA 1s58.49 MiB / 109.86 MiB [------------------------->_____________________] 53.24% 39.19 MiB p/s ETA 1s70.59 MiB / 109.86 MiB [------------------------------>________________] 64.26% 39.19 MiB p/s ETA 1s82.55 MiB / 109.86 MiB [----------------------------------->___________] 75.14% 39.19 MiB p/s ETA 0s94.61 MiB / 109.86 MiB [---------------------------------------->______] 86.12% 40.55 MiB p/s ETA 0s106.43 MiB / 109.86 MiB [-------------------------------------------->_] 96.88% 40.55 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 40.55 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 39.57 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 39.57 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 39.57 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 37.02 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 37.02 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 37.02 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 34.63 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 34.63 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 34.63 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-------------------------------------------->] 100.00% 32.40 MiB p/s ETA 0s109.86 MiB / 109.86 MiB [-----------------------------------------------] 100.00% 25.56 MiB p/s 4.5s2026-08-31T03:17:41Z	INFO	[vulndb] Artifact successfully downloaded	repo="mirror.gcr.io/aquasec/trivy-db:2"
+[2026-08-31T03:17:41.497Z] 2026-08-31T03:17:41Z	INFO	[vuln] Vulnerability scanning is enabled
+[2026-08-31T03:17:41.497Z] 2026-08-31T03:17:41Z	INFO	[secret] Secret scanning is enabled
+[2026-08-31T03:17:41.497Z] 2026-08-31T03:17:41Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+[2026-08-31T03:17:41.497Z] 2026-08-31T03:17:41Z	INFO	[secret] Please see https://trivy.dev/docs/v0.74/guide/scanner/secret#recommendation for faster secret detection
+[2026-08-31T03:17:42.853Z] 2026-08-31T03:17:42Z	INFO	Detected OS	family="alpine" version="3.24.1"
+[2026-08-31T03:17:42.853Z] 2026-08-31T03:17:42Z	WARN	This OS version is not on the EOL list	family="alpine" version="3.24"
+[2026-08-31T03:17:42.853Z] 2026-08-31T03:17:42Z	INFO	[alpine] Detecting vulnerabilities...	os_version="3.24" repository="3.24" pkg_num=18
+[2026-08-31T03:17:42.853Z] 2026-08-31T03:17:42Z	INFO	Number of language-specific files	num=1
+[2026-08-31T03:17:42.853Z] 2026-08-31T03:17:42Z	INFO	[node-pkg] Detecting vulnerabilities...
+[2026-08-31T03:17:43.104Z] + cat trivy-reporte.txt
+[2026-08-31T03:17:43.104Z] 
+[2026-08-31T03:17:43.104Z] Report Summary
+[2026-08-31T03:17:43.104Z] 
+[2026-08-31T03:17:43.104Z] ┌───────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+[2026-08-31T03:17:43.104Z] │                                Target                                 │   Type   │ Vulnerabilities │ Secrets │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ devops-task-api:1.1.1 (alpine 3.24.1)                                 │  alpine  │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/@opentelemetry/api/package.json                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/accepts/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/array-flatten/package.json                           │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/bintrees/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/body-parser/node_modules/debug/package.json          │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/body-parser/node_modules/ms/package.json             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/body-parser/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/bytes/package.json                                   │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/call-bind-apply-helpers/package.json                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/call-bound/package.json                              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/content-disposition/package.json                     │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/content-type/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/cookie-signature/package.json                        │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/cookie/package.json                                  │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.104Z] │ app/node_modules/depd/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.104Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/destroy/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/dunder-proto/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/ee-first/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/encodeurl/package.json                               │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/es-define-property/package.json                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/es-errors/package.json                               │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/es-object-atoms/package.json                         │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/escape-html/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/etag/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/express/node_modules/debug/package.json              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/express/node_modules/ms/package.json                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/express/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/finalhandler/node_modules/debug/package.json         │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/finalhandler/node_modules/ms/package.json            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/finalhandler/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/forwarded/package.json                               │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/fresh/package.json                                   │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/function-bind/package.json                           │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/get-intrinsic/package.json                           │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/get-proto/package.json                               │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/gopd/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/has-symbols/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/hasown/package.json                                  │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/http-errors/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/iconv-lite/package.json                              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/inherits/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/ipaddr.js/package.json                               │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/math-intrinsics/package.json                         │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/media-typer/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/merge-descriptors/package.json                       │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/methods/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/mime-db/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/mime-types/package.json                              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/mime/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/ms/package.json                                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/negotiator/package.json                              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/object-inspect/package.json                          │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/on-finished/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/parseurl/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/path-to-regexp/package.json                          │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/prom-client/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.105Z] │ app/node_modules/proxy-addr/package.json                              │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.105Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/qs/package.json                                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/range-parser/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/raw-body/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/safe-buffer/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/safer-buffer/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/send/node_modules/debug/node_modules/ms/package.json │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/send/node_modules/debug/package.json                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/send/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/serve-static/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/setprototypeof/package.json                          │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/side-channel-list/package.json                       │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/side-channel-map/package.json                        │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/side-channel-weakmap/package.json                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/side-channel/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/statuses/package.json                                │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/tdigest/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/toidentifier/package.json                            │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/type-is/package.json                                 │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/unpipe/package.json                                  │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/utils-merge/package.json                             │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/node_modules/vary/package.json                                    │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ app/package.json                                                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] ├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+[2026-08-31T03:17:43.106Z] │ usr/local/lib/node_modules/corepack/package.json                      │ node-pkg │        0        │    -    │
+[2026-08-31T03:17:43.106Z] └───────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+[2026-08-31T03:17:43.106Z] Legend:
+[2026-08-31T03:17:43.106Z] - '-': Not scanned
+[2026-08-31T03:17:43.106Z] - '0': Clean (no security findings detected)
+[2026-08-31T03:17:43.106Z] 
+[2026-08-31T03:17:43.106Z] + exit 0
+Post stage
+[Pipeline] archiveArtifacts
+[2026-08-31T03:17:43.156Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Desplegar en Kubernetes)
+[Pipeline] echo
+[2026-08-31T03:17:43.315Z] === STAGE 8: Desplegando en el namespace devops-lab ===
+[Pipeline] sh
+[2026-08-31T03:17:43.599Z] + sed -i.bak 's|image: devops-task-api:.*|image: devops-task-api:1.1.1|' k8s/deployment.yaml
+[2026-08-31T03:17:43.599Z] + rm -f k8s/deployment.yaml.bak
+[2026-08-31T03:17:43.599Z] + grep image: k8s/deployment.yaml
+[2026-08-31T03:17:43.599Z]           image: devops-task-api:1.1.1
+[2026-08-31T03:17:43.599Z] + kubectl apply -f k8s/namespace.yaml
+[2026-08-31T03:17:43.599Z] namespace/devops-lab unchanged
+[2026-08-31T03:17:43.599Z] + kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/hpa.yaml
+[2026-08-31T03:17:43.599Z] deployment.apps/devops-task-api unchanged
+[2026-08-31T03:17:43.599Z] service/devops-task-api unchanged
+[2026-08-31T03:17:43.599Z] horizontalpodautoscaler.autoscaling/devops-task-api unchanged
+[2026-08-31T03:17:43.599Z] + kubectl apply -f k8s/servicemonitor.yaml
+[2026-08-31T03:17:43.850Z] servicemonitor.monitoring.coreos.com/devops-task-api unchanged
+[2026-08-31T03:17:43.850Z] + kubectl -n devops-lab rollout status deployment/devops-task-api --timeout=180s
+[2026-08-31T03:17:43.850Z] deployment "devops-task-api" successfully rolled out
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verificacion post-despliegue)
+[Pipeline] echo
+[2026-08-31T03:17:44.000Z] === STAGE 9: Prueba de humo contra el servicio desplegado ===
+[Pipeline] sh
+[2026-08-31T03:17:44.282Z] + kubectl -n devops-lab get pods -l app=devops-task-api
+[2026-08-31T03:17:44.282Z] NAME                               READY   STATUS    RESTARTS   AGE
+[2026-08-31T03:17:44.282Z] devops-task-api-564b6d6b45-dmf97   1/1     Running   0          9m38s
+[2026-08-31T03:17:44.282Z] devops-task-api-564b6d6b45-mvm8k   1/1     Running   0          9m25s
+[2026-08-31T03:17:44.282Z] devops-task-api-564b6d6b45-vfghp   1/1     Running   0          9m49s
+[2026-08-31T03:17:44.282Z] + kubectl -n devops-lab run verificacion-1 --rm -i --restart=Never --quiet --image=curlimages/curl:latest '--overrides={"spec":{"securityContext":{"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}},"containers":[{"name":"verificacion-1","image":"curlimages/curl:latest","securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},"command":["sh","-c","curl -sf http://devops-task-api/healthz && echo && curl -sf http://devops-task-api/metrics | head -3"]}]}}'
+[2026-08-31T03:17:47.534Z] {"status":"ok","uptimeSeconds":589}
+[2026-08-31T03:17:47.534Z] # HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+[2026-08-31T03:17:47.534Z] # TYPE process_cpu_user_seconds_total counter
+[2026-08-31T03:17:47.534Z] process_cpu_user_seconds_total{application="devops-task-api",environment="production"} 2.6171199999999994
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobacion para produccion)
+Stage "Aprobacion para produccion" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
+[2026-08-31T03:17:48.130Z] + docker image prune -f
+[Pipeline] cleanWs
+[2026-08-31T03:17:48.419Z] [WS-CLEANUP] Deleting project workspace...
+[2026-08-31T03:17:48.421Z] [WS-CLEANUP] Deferred wipeout is used...
+[2026-08-31T03:17:48.439Z] [WS-CLEANUP] done
+[Pipeline] echo
+[2026-08-31T03:17:48.499Z] Despliegue exitoso: devops-task-api:1.1.1 en devops-lab
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -1,0 +1,12 @@
+03:20:58 UTC  T0  Estado normal, version 1.1.1 en produccion. Se construye 1.2.0.
+03:21:05 UTC  T1  Imagen 1.2.0 construida: ESLint y las 30 pruebas pasan. CI no detecta nada.
+03:21:13 UTC  T2  Despliegue de 1.2.0 en el namespace devops-lab.
+03:21:50 UTC  T3  Rollout completado. Los 3 pods quedan Running y superan liveness y readiness.
+03:22:00 UTC  T4  Tasa de errores 5xx: 0%. No hay alertas. El servicio parece sano.
+              --- El defecto lleva activo desde T3, pero no hay trafico que lo ejerza ---
+03:25:45 UTC  T5  Se reanuda el trafico de usuarios.
+03:27:58 UTC  T6  La alerta TasaDeErroresElevada pasa a firing.
+03:28:28 UTC  T7  Diagnostico: la version 1.2.0 responde 500 en POST /api/tasks; /healthz sigue en 200.
+03:28:28 UTC  T8  Se ejecuta el rollback: kubectl rollout undo.
+03:29:05 UTC  T9  Rollback completado. La version 1.1.1 vuelve a estar en produccion.
+03:33:16 UTC  T10 La alerta vuelve a inactive. Incidente cerrado.

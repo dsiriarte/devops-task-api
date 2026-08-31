@@ -6,15 +6,21 @@ de la asignatura *Fundamentos DevOps* de la Universidad de La Sabana.
 
 El repositorio contiene **dos pipelines**: uno de **integración continua** con
 GitHub Actions, que se ejecuta automáticamente ante cada `push` y cada *pull
-request*, y uno de **entrega continua** con Jenkins, definido en un `Jenkinsfile`
-con los *stages* necesarios para construir, escanear, publicar y desplegar la
-aplicación en un clúster de Kubernetes.
+request*, y uno de **entrega continua** con Jenkins, que analiza el código con
+SonarQube, escanea la imagen con Trivy y despliega la aplicación en un clúster de
+Kubernetes, donde Prometheus y Grafana la observan.
+
+La aplicación **está desplegada y monitoreada de verdad**: tres réplicas
+corriendo, métricas recolectadas cada 15 segundos, un tablero con trece paneles y
+seis reglas de alerta.
 
 | | |
 |---|---|
 | **Autor** | David Santiago Iriarte Zamora |
 | **Asignatura** | Fundamentos DevOps — Unidad 2, Actividad 3 |
 | **Stack** | Node.js 24 · Express · Jest · ESLint · Docker · Kubernetes |
+| **Seguridad** | SonarQube · Trivy · npm audit |
+| **Monitoreo** | Prometheus · Grafana · Alertmanager |
 | **CI** | GitHub Actions (`.github/workflows/ci.yml`) |
 | **CD** | Jenkins (`Jenkinsfile`) |
 
@@ -309,6 +315,87 @@ automático y observabilidad).
 - [`docs/img/`](docs/img/) — capturas de la ejecución de ambos pipelines.
 - [`docs/evidencia-jenkins-consola.txt`](docs/evidencia-jenkins-consola.txt) — log
   completo de la ejecución del pipeline de Jenkins.
+
+---
+
+---
+
+## 11. Seguridad y monitoreo (unidad 3)
+
+Esta fase añade análisis de seguridad y observabilidad sobre el despliegue real
+en Kubernetes.
+
+### Seguridad
+
+| Herramienta | Superficie | Dónde se ejecuta | Resultado |
+|---|---|---|---|
+| SonarQube | Código propio | Jenkins, stages 4 y 5 | 0 bugs · 0 vulnerabilidades · puerta **Passed** |
+| npm audit | Dependencias declaradas | GitHub Actions | 0 vulnerabilidades |
+| Trivy | Imagen del contenedor | GitHub Actions y Jenkins | De 6 vulnerabilidades altas a **0** |
+
+Informe completo: [`docs/seguridad/informe-seguridad.md`](docs/seguridad/informe-seguridad.md).
+
+SonarQube se ejecuta desde Jenkins y no desde GitHub Actions porque la instancia
+está autoalojada y solo es accesible desde la red local, mientras los *runners*
+de GitHub viven en la nube.
+
+### Monitoreo
+
+La aplicación expone `/metrics` en formato Prometheus con métricas del proceso,
+un histograma de latencia HTTP y métricas de negocio. Un `ServiceMonitor` declara
+el objetivo de recolección y el tablero de Grafana vive versionado como
+`ConfigMap`.
+
+| Recurso | Archivo |
+|---|---|
+| Valores del stack de observabilidad | [`monitoring/values-monitoring.yaml`](monitoring/values-monitoring.yaml) |
+| Tablero de Grafana | [`monitoring/dashboard-devops-task-api.json`](monitoring/dashboard-devops-task-api.json) |
+| Reglas de alerta | [`monitoring/alert-rules.yaml`](monitoring/alert-rules.yaml) |
+| Objetivo de recolección | [`k8s/servicemonitor.yaml`](k8s/servicemonitor.yaml) |
+
+Seis alertas cubren disponibilidad (`AplicacionCaida`, `PodsInsuficientes`,
+`ReinicioFrecuenteDePods`), rendimiento (`TasaDeErroresElevada`, `LatenciaAlta`)
+y recursos (`MemoriaCercaDelLimite`).
+
+### Reproducir el entorno completo
+
+```bash
+# 1. Clúster local con Docker y Kubernetes
+colima start --cpu 6 --memory 12 --disk 60 --kubernetes
+
+# 2. Construir y desplegar la aplicación
+docker build -t devops-task-api:1.1.1 .
+kubectl apply -f k8s/
+
+# 3. Stack de observabilidad
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace \
+  --values monitoring/values-monitoring.yaml
+kubectl apply -f monitoring/alert-rules.yaml -f monitoring/dashboard-configmap.yaml
+
+# 4. Análisis estático
+docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+docker run --rm --network host -v "$PWD:/usr/src" \
+  -e SONAR_HOST_URL=http://localhost:9000 -e SONAR_TOKEN=<token> \
+  sonarsource/sonar-scanner-cli:latest
+
+# 5. Acceso a las interfaces
+kubectl -n monitoring port-forward svc/monitoring-grafana 3001:80      # Grafana
+kubectl -n monitoring port-forward svc/monitoring-prometheus 9090:9090 # Prometheus
+```
+
+### Evidencias
+
+| Evidencia | Archivo |
+|---|---|
+| Dashboard de Grafana en operación | [`docs/img/05-grafana-dashboard.png`](docs/img/05-grafana-dashboard.png) |
+| Panel de SonarQube | [`docs/img/06-sonarqube-dashboard.png`](docs/img/06-sonarqube-dashboard.png) |
+| Pipeline de CD con seguridad y despliegue | [`docs/img/07-jenkins-cd-k8s.png`](docs/img/07-jenkins-cd-k8s.png) |
+| Dashboard durante el incidente simulado | [`docs/img/08-grafana-incidente.png`](docs/img/08-grafana-incidente.png) |
+| Log de consola del pipeline de CD | [`docs/evidencia-jenkins-cd-k8s.txt`](docs/evidencia-jenkins-cd-k8s.txt) |
+| Cronología del incidente | [`docs/postmortem/cronologia-incidente.txt`](docs/postmortem/cronologia-incidente.txt) |
+| Documentación técnica de esta fase | [`docs/documentacion-tecnica-u3.md`](docs/documentacion-tecnica-u3.md) |
 
 ---
 

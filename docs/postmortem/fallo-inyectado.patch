@@ -1,0 +1,13 @@
+--- a/src/services/taskStore.js
++++ b/src/services/taskStore.js
+@@ Se introduce deliberadamente un defecto en la validacion de longitud.
+@@
+ El cambio sustituye la comprobacion de longitud maxima (120 caracteres) por
+ una comparacion invertida contra un umbral de 20, de modo que cualquier titulo
+ con mas de 20 caracteres provoca una excepcion no controlada en lugar de una
+ validacion. La excepcion escapa del manejador de ValidationError y la API
+ responde 500.
+
+ Es un defecto realista: pasa las pruebas existentes porque ningun caso de
+ prueba usa titulos de mas de 20 caracteres, y solo se manifiesta con el
+ patron de trafico real.
